@@ -16,6 +16,8 @@
 		E6A60CF71B81A071000898F7 /* TransformFadeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A60CF61B81A071000898F7 /* TransformFadeView.swift */; };
 		E6A60CFA1B81ABB3000898F7 /* 2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6A60CF81B81ABB3000898F7 /* 2@2x.png */; };
 		E6A60CFB1B81ABB3000898F7 /* 1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6A60CF91B81ABB3000898F7 /* 1@2x.png */; };
+		E6A60CFD1B81D771000898F7 /* ImagePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A60CFC1B81D771000898F7 /* ImagePlayerView.swift */; };
+		E6A60CFF1B81E063000898F7 /* ModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A60CFE1B81E063000898F7 /* ModalViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +44,8 @@
 		E6A60CF61B81A071000898F7 /* TransformFadeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransformFadeView.swift; sourceTree = "<group>"; };
 		E6A60CF81B81ABB3000898F7 /* 2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "2@2x.png"; sourceTree = "<group>"; };
 		E6A60CF91B81ABB3000898F7 /* 1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1@2x.png"; sourceTree = "<group>"; };
+		E6A60CFC1B81D771000898F7 /* ImagePlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePlayerView.swift; sourceTree = "<group>"; };
+		E6A60CFE1B81E063000898F7 /* ModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +90,7 @@
 				E6A60CF51B81A017000898F7 /* Source */,
 				E6A60CD51B819FD5000898F7 /* AppDelegate.swift */,
 				E6A60CD71B819FD5000898F7 /* ViewController.swift */,
+				E6A60CFE1B81E063000898F7 /* ModalViewController.swift */,
 				E6A60CD91B819FD5000898F7 /* Main.storyboard */,
 				E6A60CDC1B819FD5000898F7 /* Images.xcassets */,
 				E6A60CDE1B819FD5000898F7 /* LaunchScreen.xib */,
@@ -125,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				E6A60CF61B81A071000898F7 /* TransformFadeView.swift */,
+				E6A60CFC1B81D771000898F7 /* ImagePlayerView.swift */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -232,8 +238,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				E6A60CD81B819FD5000898F7 /* ViewController.swift in Sources */,
+				E6A60CFF1B81E063000898F7 /* ModalViewController.swift in Sources */,
 				E6A60CD61B819FD5000898F7 /* AppDelegate.swift in Sources */,
 				E6A60CF71B81A071000898F7 /* TransformFadeView.swift in Sources */,
+				E6A60CFD1B81D771000898F7 /* ImagePlayerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

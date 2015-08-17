@@ -34,6 +34,10 @@ class TransformFadeView: UIImageView {
         setup()
     }
     
+    override init(image: UIImage!) {
+        super.init(image: image)
+    }
+    
     // MARK: - SETUP
     
     private func setup() {
