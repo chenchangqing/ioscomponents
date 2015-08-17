@@ -12,7 +12,9 @@ class ModalViewController: UIViewController {
 
     @IBOutlet weak var imagePlayerView: ImagePlayerView!        // 轮播控件
     
-    private var transformFadeViews = [TransformFadeView]()      // 图片视图
+    private var images = [UIImage]()      // 图片视图
+    
+    private var timer : NSTimer!
     
     // MARK: - 
     
@@ -21,11 +23,6 @@ class ModalViewController: UIViewController {
         
         setup()
         
-        // 延迟设置图片
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(NSEC_PER_SEC * 2)), dispatch_get_main_queue(),{
-        
-            self.imagePlayerView.index = 0
-        })
     }
 
     override func didReceiveMemoryWarning() {
@@ -37,11 +34,22 @@ class ModalViewController: UIViewController {
     private func setup() {
         
         // 增加图片
-        transformFadeViews.append(TransformFadeView(image: UIImage(named: "1")!))
-        transformFadeViews.append(TransformFadeView(image: UIImage(named: "2")!))
+        images.append(UIImage(named: "1")!)
+        images.append(UIImage(named: "2")!)
+        images.append(UIImage(named: "3.jpeg")!)
+        images.append(UIImage(named: "4.jpeg")!)
+        images.append(UIImage(named: "5.jpeg")!)
         
         // 设置图片
-        imagePlayerView.imageViews = transformFadeViews
+        imagePlayerView.images = images
+        
+        // 设置定时器
+        timer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: Selector("timerEvent"), userInfo: nil, repeats: true)
+    }
+    
+    func timerEvent() {
+        
+        imagePlayerView.index = Int(arc4random() % 4)
     }
 
 }

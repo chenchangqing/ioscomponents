@@ -13,6 +13,13 @@ class TransformFadeView: UIImageView {
     var verticalCount   : Int = 1               // 渐变方块垂直方向个数
     var horizontalCount : Int = 12              // 渐变方块水平方向个数
     var duration        : NSTimeInterval = 1    // 渐变动画的时间
+    var isHiding        : Bool! {
+        get {
+        
+            return flag
+        }
+    }
+    private var flag    = false
     
     private var maskLayer       : CALayer!      // maskLayer遮罩
     private var submaskLayers   = [CALayer]()   // maskLayer中的子layer
@@ -36,6 +43,13 @@ class TransformFadeView: UIImageView {
     
     override init(image: UIImage!) {
         super.init(image: image)
+        
+        setup()
+    }
+    
+    deinit {
+        
+        self.removeObserver(self, forKeyPath: "bounds")
     }
     
     // MARK: - SETUP
@@ -49,6 +63,29 @@ class TransformFadeView: UIImageView {
         // 设置maskLayer
         self.layer.mask = maskLayer
         
+        // 计算
+        caculate()
+        
+        // 设置kvo
+        self.addObserver(self, forKeyPath: "bounds", options: NSKeyValueObservingOptions.New, context: nil)
+    }
+    
+    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
+        
+        if keyPath == "bounds" {
+            
+            caculate()
+        }
+    }
+    
+    private func caculate() {
+        
+        // 移除子maskLayer
+        for layer in submaskLayers {
+            layer.removeFromSuperlayer()
+        }
+        submaskLayers.removeAll(keepCapacity: false)
+        
         // 计算每个子maskLayer的尺寸
         let height:CGFloat      = CGRectGetHeight(self.bounds)
         let width:CGFloat       = CGRectGetWidth(self.bounds)
@@ -61,9 +98,9 @@ class TransformFadeView: UIImageView {
             for(var vertical=0; vertical<verticalCount; vertical++) {
                 
                 let frame = CGRectMake(subWidth * CGFloat(horizontal),
-                                       subHeight * CGFloat(vertical),
-                                       subWidth,
-                                       subHeight)
+                    subHeight * CGFloat(vertical),
+                    subWidth,
+                    subHeight)
                 let subLayer = CALayer()
                 subLayer.frame = frame
                 subLayer.backgroundColor = UIColor.blackColor().CGColor
@@ -75,6 +112,7 @@ class TransformFadeView: UIImageView {
                 submaskLayers.append(subLayer)
             }
         }
+
     }
     
     // MARK: - 渐变显示、隐藏
@@ -111,6 +149,8 @@ class TransformFadeView: UIImageView {
                 self.submaskLayers[i].opacity = 0
             }
         }
+        
+        self.flag = true
     }
     
     /**
@@ -144,6 +184,7 @@ class TransformFadeView: UIImageView {
                 self.submaskLayers[i].opacity = 1
             }
         }
+        self.flag = false
     }
     
 }

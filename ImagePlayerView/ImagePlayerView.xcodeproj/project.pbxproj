@@ -18,6 +18,9 @@
 		E6A60CFB1B81ABB3000898F7 /* 1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6A60CF91B81ABB3000898F7 /* 1@2x.png */; };
 		E6A60CFD1B81D771000898F7 /* ImagePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A60CFC1B81D771000898F7 /* ImagePlayerView.swift */; };
 		E6A60CFF1B81E063000898F7 /* ModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A60CFE1B81E063000898F7 /* ModalViewController.swift */; };
+		E6DF32961B8262F400E1B219 /* 3.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = E6DF32931B8262F400E1B219 /* 3.jpeg */; };
+		E6DF32971B8262F400E1B219 /* 4.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = E6DF32941B8262F400E1B219 /* 4.jpeg */; };
+		E6DF32981B8262F400E1B219 /* 5.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = E6DF32951B8262F400E1B219 /* 5.jpeg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +49,9 @@
 		E6A60CF91B81ABB3000898F7 /* 1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1@2x.png"; sourceTree = "<group>"; };
 		E6A60CFC1B81D771000898F7 /* ImagePlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePlayerView.swift; sourceTree = "<group>"; };
 		E6A60CFE1B81E063000898F7 /* ModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalViewController.swift; sourceTree = "<group>"; };
+		E6DF32931B8262F400E1B219 /* 3.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 3.jpeg; sourceTree = "<group>"; };
+		E6DF32941B8262F400E1B219 /* 4.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 4.jpeg; sourceTree = "<group>"; };
+		E6DF32951B8262F400E1B219 /* 5.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 5.jpeg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +108,9 @@
 		E6A60CD31B819FD5000898F7 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E6DF32931B8262F400E1B219 /* 3.jpeg */,
+				E6DF32941B8262F400E1B219 /* 4.jpeg */,
+				E6DF32951B8262F400E1B219 /* 5.jpeg */,
 				E6A60CF81B81ABB3000898F7 /* 2@2x.png */,
 				E6A60CF91B81ABB3000898F7 /* 1@2x.png */,
 				E6A60CD41B819FD5000898F7 /* Info.plist */,
@@ -216,6 +225,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E6A60CDB1B819FD5000898F7 /* Main.storyboard in Resources */,
+				E6DF32971B8262F400E1B219 /* 4.jpeg in Resources */,
+				E6DF32961B8262F400E1B219 /* 3.jpeg in Resources */,
+				E6DF32981B8262F400E1B219 /* 5.jpeg in Resources */,
 				E6A60CE01B819FD5000898F7 /* LaunchScreen.xib in Resources */,
 				E6A60CFB1B81ABB3000898F7 /* 1@2x.png in Resources */,
 				E6A60CDD1B819FD5000898F7 /* Images.xcassets in Resources */,
@@ -439,6 +451,7 @@
 				E6A60CF11B819FD5000898F7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E6A60CF21B819FD5000898F7 /* Build configuration list for PBXNativeTarget "ImagePlayerViewTests" */ = {
 			isa = XCConfigurationList;
@@ -447,6 +460,7 @@
 				E6A60CF41B819FD5000898F7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

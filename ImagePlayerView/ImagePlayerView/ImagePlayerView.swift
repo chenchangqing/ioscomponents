@@ -10,7 +10,7 @@ import UIKit
 
 class ImagePlayerView: UIView {
     
-    var imageViews = [TransformFadeView]()                      // 图片数组
+    var images = [UIImage]()                      // 图片数组
     {
         didSet {
             
@@ -22,11 +22,18 @@ class ImagePlayerView: UIView {
     {
         willSet{
             
-            switchImage(newValue)
+            // 符合条件才切换图片
+            if  newValue < imageViews.count
+                && newValue >= 0
+                && imageViews.count > 0{
+                
+                switchImage(newValue)
+            }
         }
     }
     
     private let kImageView = "imageView"
+    var imageViews = [TransformFadeView]()
     
     // MARK: -
     
@@ -56,26 +63,35 @@ class ImagePlayerView: UIView {
      */
     private func reload() {
         
+        // 移除图片视图
+        for imageView in imageViews {
+            
+            imageView.removeFromSuperview()
+        }
+        
         // 图片字典
         var imageViewDic = [String:TransformFadeView]()
         
-        for(var i=0;i<imageViews.count;i++){
+        for(var i=0;i<images.count;i++){
             
-            // 存放图片字典
-            imageViewDic["\(kImageView)\(i)"] = imageViews[i]
+            // 创建imageViews
+            let imageView = TransformFadeView(image: images[i])
+            
+            // 存放图片视图数组
+            imageViews.append(imageView)
+            
+            // 存放图片视图字典
+            imageViewDic["\(kImageView)\(i)"] = imageView
             
             // 代码控制约束必须设置此项
-            imageViews[i].setTranslatesAutoresizingMaskIntoConstraints(false)
+            imageView.setTranslatesAutoresizingMaskIntoConstraints(false)
             
             // 增加图片视图
-            self.addSubview(imageViews[i])
+            self.addSubview(imageView)
             
             // 增加约束
             self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-5-[\(kImageView)\(i)]-5-|", options: NSLayoutFormatOptions(0), metrics: nil, views: imageViewDic))
             self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-5-[\(kImageView)\(i)]-5-|", options: NSLayoutFormatOptions(0), metrics: nil, views: imageViewDic))
-            
-            // 设置当前显示页数
-            index = i
             
         }
     }
@@ -87,20 +103,28 @@ class ImagePlayerView: UIView {
      */
     private func switchImage(index:Int) {
         
-        if imageViews.count > 0 {
+        //获取将要现实的图片View的Z-index
+        let currentIndex = (self.subviews as NSArray).indexOfObject(imageViews[index])
+        
+        // 隐藏上层的View
+        for (var i = self.subviews.count - 1;i>currentIndex; i--) {
             
-            // 调整视图层次
-            if index >= imageViews.count {
+            let imageView = self.subviews[i] as! TransformFadeView
+            if !imageView.isHiding! {
                 
-                self.bringSubviewToFront(imageViews[imageViews.count - 1])
-            } else if index < 0 {
-                
-                self.bringSubviewToFront(imageViews[0])
-            } else {
-                
-                self.bringSubviewToFront(imageViews[index])
+                imageView.hideAnimated(true)
             }
         }
-    
+        
+        // 显示下层的View直到显示当前的为止
+        for (var i = 0; i<=currentIndex; i++) {
+            
+            let imageView = self.subviews[i] as! TransformFadeView
+            if imageView.isHiding! {
+                
+                imageView.showAnimated(true)
+            }
+        }
+        
     }
 }
