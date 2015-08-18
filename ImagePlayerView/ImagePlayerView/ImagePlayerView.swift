@@ -16,6 +16,8 @@ enum PlayOrder {
 
 class ImagePlayerView: UIView {
     
+    // MARK: - 可配置属性
+    
     /**
      * 图片数组
      */
@@ -103,11 +105,16 @@ class ImagePlayerView: UIView {
                 setupTimer()
             } else {
                 
-                timer.invalidate()
-                timer = nil
+                if timer != nil {
+                    
+                    timer.invalidate()
+                    timer = nil
+                }
             }
         }
     }
+    
+    // MARK: -
     
     private let kImageView  = "imageView"
     private var imageViews  = [TransformFadeView]()
@@ -148,7 +155,11 @@ class ImagePlayerView: UIView {
         pageControl.setTranslatesAutoresizingMaskIntoConstraints(false)
         pageControl.pageIndicatorTintColor = pageIndicatorTintColor
         pageControl.currentPageIndicatorTintColor = currentPageIndicatorTintColor
+        pageControl.backgroundColor = UIColor.purpleColor()
         self.addSubview(pageControl)
+        
+        // pageControl 事件
+        pageControl.addTarget(self, action: Selector("handleClickPageControl:"), forControlEvents: UIControlEvents.TouchUpInside)
         
         // 约束
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[pageControl]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: ["pageControl":pageControl]))
@@ -289,5 +300,20 @@ class ImagePlayerView: UIView {
             
             index -= 1
         }
+    }
+    
+    /**
+     * 页码指示器事件
+     */
+    func handleClickPageControl(sender:UIPageControl) {
+        
+        isAutoPlay = false
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(NSEC_PER_SEC * 5)), dispatch_get_main_queue(), { () -> Void in
+            
+            self.isAutoPlay = true
+        })
+        
+        index = sender.currentPage
     }
 }

@@ -92,7 +92,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bq0-6i-Ko4">
-                                <rect key="frame" x="16" y="624" width="343" height="30"/>
+                                <rect key="frame" x="16" y="587" width="343" height="30"/>
                                 <state key="normal" title="取消">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -103,7 +103,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="K6m-o7-3Wu" firstAttribute="top" secondItem="Bq0-6i-Ko4" secondAttribute="bottom" constant="13" id="5bS-jM-VFb"/>
+                            <constraint firstItem="K6m-o7-3Wu" firstAttribute="top" secondItem="Bq0-6i-Ko4" secondAttribute="bottom" constant="50" id="5bS-jM-VFb"/>
                             <constraint firstItem="hG6-9E-5YL" firstAttribute="top" secondItem="lp2-1u-feq" secondAttribute="topMargin" id="HjF-Gf-HJF"/>
                             <constraint firstItem="Bq0-6i-Ko4" firstAttribute="trailing" secondItem="lp2-1u-feq" secondAttribute="trailingMargin" id="TG2-2t-Tpl"/>
                             <constraint firstItem="K6m-o7-3Wu" firstAttribute="top" secondItem="hG6-9E-5YL" secondAttribute="bottom" id="YZ7-p8-PHU"/>
