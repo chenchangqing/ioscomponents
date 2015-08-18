@@ -122,6 +122,8 @@ class ImagePlayerView: UIView {
     private var pageControlConstraints = [NSLayoutConstraint]()
     private var timer : NSTimer!
     private var order : PlayOrder = .Asc
+    private var leftSwipeGestureRecognizer:UISwipeGestureRecognizer!
+    private var rightSwipeGestureRecognizer:UISwipeGestureRecognizer!
     
     // MARK: -
     
@@ -145,6 +147,9 @@ class ImagePlayerView: UIView {
         
         // 定时器
         setupTimer()
+        
+        // 手势
+        setupSwipeGesture()
     }
     
     private func setupPageControl() {
@@ -171,6 +176,18 @@ class ImagePlayerView: UIView {
             
             timer = NSTimer.scheduledTimerWithTimeInterval(duration, target: self, selector: Selector("timerEvent"), userInfo: nil, repeats: true)
         }
+    }
+    
+    private func setupSwipeGesture() {
+        
+        leftSwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
+        rightSwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
+        
+        leftSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirection.Left
+        rightSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirection.Right
+        
+        self.addGestureRecognizer(leftSwipeGestureRecognizer)
+        self.addGestureRecognizer(rightSwipeGestureRecognizer)
     }
     
     // MARK: -
@@ -308,11 +325,34 @@ class ImagePlayerView: UIView {
         
         isAutoPlay = false
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(NSEC_PER_SEC * 5)), dispatch_get_main_queue(), { () -> Void in
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(NSEC_PER_SEC * UInt64(duration))), dispatch_get_main_queue(), { () -> Void in
             
             self.isAutoPlay = true
         })
         
         index = sender.currentPage
+    }
+    
+    /**
+     * 左右滑动
+     */
+    func handleSwipes(sender: UISwipeGestureRecognizer) {
+        
+        isAutoPlay = false
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(NSEC_PER_SEC * UInt64(duration))), dispatch_get_main_queue(), { () -> Void in
+            
+            self.isAutoPlay = true
+        })
+        
+        if sender.direction == UISwipeGestureRecognizerDirection.Left {
+            
+            index -= 1
+        }
+        
+        if sender.direction == UISwipeGestureRecognizerDirection.Right {
+            
+            index += 1
+        }
     }
 }
