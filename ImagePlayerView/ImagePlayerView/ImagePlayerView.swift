@@ -34,12 +34,22 @@ class ImagePlayerView: UIView {
     {
         willSet{
             
+            if images.count == 0 {
+                
+                return
+            }
+            
             // 符合条件才切换图片
-            if  newValue < imageViews.count
-                && newValue >= 0
-                && imageViews.count > 0{
+            if  newValue < images.count
+                && newValue >= 0{
                 
                 switchImage(newValue)
+            } else if newValue < 0 {
+                
+                switchImage(0)
+            } else {
+                
+                switchImage(images.count - 1)
             }
         }
         
@@ -170,7 +180,7 @@ class ImagePlayerView: UIView {
         // 图片字典
         var imageViewDic = [String:TransformFadeView]()
         
-        for(var i=0;i<images.count;i++){
+        for(var i=images.count - 1;i>=0;i--){
             
             // 创建imageViews
             let imageView = TransformFadeView(image: images[i])
@@ -206,8 +216,9 @@ class ImagePlayerView: UIView {
      */
     private func switchImage(index:Int) {
         
+        
         //获取将要现实的图片View的Z-index
-        let currentIndex = (self.subviews as NSArray).indexOfObject(imageViews[index])
+        let currentIndex = (self.subviews as NSArray).indexOfObject(imageViews[images.count - 1 - index])
         
         // 隐藏上层的View
         for (var i = self.subviews.count - 1;i>currentIndex; i--) {

@@ -30,8 +30,8 @@ class ModalViewController: UIViewController {
         // 改变图片
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(NSEC_PER_SEC * 7)), dispatch_get_main_queue(), { () -> Void in
             
-            self.images.append(UIImage(named: "1")!)
-            self.images.append(UIImage(named: "2")!)
+            self.images.append(UIImage(named: "4.jpeg")!)
+            self.images.append(UIImage(named: "5.jpeg")!)
             self.imagePlayerView.images = self.images
             self.imagePlayerView.isAutoPlay = true
         })
@@ -42,10 +42,16 @@ class ModalViewController: UIViewController {
             self.imagePlayerView.index = 9
         })
         
-        // 改变图片
+        // 改变index
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(NSEC_PER_SEC * 12)), dispatch_get_main_queue(), { () -> Void in
             
             self.imagePlayerView.index = -4
+        })
+        
+        // 改变轮播时间
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(NSEC_PER_SEC * 12)), dispatch_get_main_queue(), { () -> Void in
+            
+            self.imagePlayerView.duration = 3
         })
         
     }
@@ -62,8 +68,6 @@ class ModalViewController: UIViewController {
         images.append(UIImage(named: "1")!)
         images.append(UIImage(named: "2")!)
         images.append(UIImage(named: "3.jpeg")!)
-        images.append(UIImage(named: "4.jpeg")!)
-        images.append(UIImage(named: "5.jpeg")!)
         
         // 设置图片
         imagePlayerView.images = images
