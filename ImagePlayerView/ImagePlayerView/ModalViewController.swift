@@ -21,6 +21,33 @@ class ModalViewController: UIViewController {
         
         setup()
         
+        // 测试不支持自动轮播
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(NSEC_PER_SEC * 5)), dispatch_get_main_queue(), { () -> Void in
+            
+            self.imagePlayerView.isAutoPlay = false
+        })
+        
+        // 改变图片
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(NSEC_PER_SEC * 7)), dispatch_get_main_queue(), { () -> Void in
+            
+            self.images.append(UIImage(named: "1")!)
+            self.images.append(UIImage(named: "2")!)
+            self.imagePlayerView.images = self.images
+            self.imagePlayerView.isAutoPlay = true
+        })
+        
+        // 改变图片
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(NSEC_PER_SEC * 9)), dispatch_get_main_queue(), { () -> Void in
+            
+            self.imagePlayerView.index = 9
+        })
+        
+        // 改变图片
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(NSEC_PER_SEC * 12)), dispatch_get_main_queue(), { () -> Void in
+            
+            self.imagePlayerView.index = -4
+        })
+        
     }
 
     override func didReceiveMemoryWarning() {

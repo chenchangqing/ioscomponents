@@ -10,13 +10,16 @@ import UIKit
 
 enum PlayOrder {
     
-    case Desc
-    case Asc
+    case Desc   // 降序播放
+    case Asc    // 升序播放
 }
 
 class ImagePlayerView: UIView {
     
-    var images = [UIImage]()                      // 图片数组
+    /**
+     * 图片数组
+     */
+    var images = [UIImage]()
     {
         didSet {
             
@@ -24,7 +27,10 @@ class ImagePlayerView: UIView {
         }
     }
     
-    var index : Int = -1   // 当前显示第几张
+    /**
+     * 当前显示images中的第几张
+     */
+    var index : Int = -1
     {
         willSet{
             
@@ -39,6 +45,7 @@ class ImagePlayerView: UIView {
         
         didSet {
             
+            // 比较新值、旧值可以得出应该升序播放还是降序
             if index >= oldValue {
                 
                 order = .Asc
@@ -49,6 +56,9 @@ class ImagePlayerView: UIView {
         }
     }
     
+    /**
+     * 页码指示器当前点的颜色
+     */
     var currentPageIndicatorTintColor = UIColor.magentaColor() {
         
         willSet {
@@ -56,6 +66,9 @@ class ImagePlayerView: UIView {
         }
     }
     
+    /**
+     * 页码指示器的颜色
+     */
     var pageIndicatorTintColor        = UIColor.whiteColor() {
         
         willSet {
@@ -63,7 +76,28 @@ class ImagePlayerView: UIView {
         }
     }
     
+    /**
+     * 轮播时间控制
+     */
     var duration: NSTimeInterval = 4
+    
+    /**
+     * 是否自动播放
+     */
+    var isAutoPlay = true {
+        
+        willSet {
+            
+            if newValue {
+                
+                setupTimer()
+            } else {
+                
+                timer.invalidate()
+                timer = nil
+            }
+        }
+    }
     
     private let kImageView  = "imageView"
     private var imageViews  = [TransformFadeView]()
@@ -93,7 +127,7 @@ class ImagePlayerView: UIView {
         setupPageControl()
         
         // 定时器
-        timer = NSTimer.scheduledTimerWithTimeInterval(duration, target: self, selector: Selector("timerEvent"), userInfo: nil, repeats: true)
+        setupTimer()
     }
     
     private func setupPageControl() {
@@ -111,6 +145,14 @@ class ImagePlayerView: UIView {
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[pageControl]-|", options: NSLayoutFormatOptions(0), metrics: nil, views: ["pageControl":pageControl]))
     }
     
+    private func setupTimer() {
+        
+        if timer == nil {
+            
+            timer = NSTimer.scheduledTimerWithTimeInterval(duration, target: self, selector: Selector("timerEvent"), userInfo: nil, repeats: true)
+        }
+    }
+    
     // MARK: -
     
     /**
@@ -123,6 +165,7 @@ class ImagePlayerView: UIView {
             
             imageView.removeFromSuperview()
         }
+        imageViews.removeAll(keepCapacity: false)
         
         // 图片字典
         var imageViewDic = [String:TransformFadeView]()
@@ -200,9 +243,23 @@ class ImagePlayerView: UIView {
      */
     func timerEvent() {
         
-        if index  == 0 {
+        if index  < 0 {
+            
+            index = 1
+            
+            return
+        }
+        
+        if index == 0 {
             
             index += 1
+            
+            return
+        }
+        
+        if index  > images.count - 1 {
+            
+            index = images.count - 1
             
             return
         }
