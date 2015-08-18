@@ -8,6 +8,23 @@
 
 import UIKit
 
+/**
+ * 协议
+ */
+protocol ImagePlayerViewDelegate :NSObjectProtocol {
+    
+    /**
+     * 显示多少张图片
+     */
+    func numberOfItems() -> Int
+    
+    /**
+     * 初始化图片视图时回调
+     */
+    func imagePlayerView(imagePlayerView:ImagePlayerView, imageView:UIImageView, index:Int)
+    
+}
+
 enum PlayOrder {
     
     case Desc   // 降序播放
@@ -19,30 +36,19 @@ class ImagePlayerView: UIView {
     // MARK: - 可配置属性
     
     /**
-     * 图片数组
-     */
-    var images = [UIImage]()
-    {
-        didSet {
-            
-            reload()
-        }
-    }
-    
-    /**
      * 当前显示images中的第几张
      */
     var index : Int = -1
     {
         willSet{
             
-            if images.count == 0 {
+            if imageViews.count == 0 {
                 
                 return
             }
             
-            // 符合条件才切换图片
-            if  newValue < images.count
+            // 切换图片
+            if  newValue < imageViews.count
                 && newValue >= 0{
                 
                 switchImage(newValue)
@@ -51,7 +57,7 @@ class ImagePlayerView: UIView {
                 switchImage(0)
             } else {
                 
-                switchImage(images.count - 1)
+                switchImage(imageViews.count - 1)
             }
         }
         
@@ -113,6 +119,11 @@ class ImagePlayerView: UIView {
             }
         }
     }
+    
+    /**
+     * 代理协议
+     */
+    var delegate: ImagePlayerViewDelegate?
     
     // MARK: -
     
@@ -195,7 +206,21 @@ class ImagePlayerView: UIView {
     /**
      * 刷新控件
      */
-    private func reload() {
+    func reload() {
+        
+        // 判断
+        if delegate == nil {
+            
+            println("请设置代理")
+            return
+        }
+        
+        // 从代理获取图片个数
+        let imageCount = delegate!.numberOfItems()
+        if imageCount <= 0 {
+            
+            return
+        }
         
         // 移除图片视图
         for imageView in imageViews {
@@ -207,10 +232,13 @@ class ImagePlayerView: UIView {
         // 图片字典
         var imageViewDic = [String:TransformFadeView]()
         
-        for(var i=images.count - 1;i>=0;i--){
+        for(var i=imageCount - 1;i>=0;i--){
             
             // 创建imageViews
-            let imageView = TransformFadeView(image: images[i])
+            let imageView = TransformFadeView(frame: CGRectZero)
+            
+            // 调用delegate方法
+            delegate!.imagePlayerView(self, imageView: imageView, index: imageCount - 1 - i)
             
             // 存放图片视图数组
             imageViews.append(imageView)
@@ -231,7 +259,7 @@ class ImagePlayerView: UIView {
         }
         
         // 设置pageControl层次
-        pageControl.numberOfPages = images.count
+        pageControl.numberOfPages = imageViews.count
         pageControl.currentPage = 0
         self.bringSubviewToFront(pageControl)
     }
@@ -245,7 +273,7 @@ class ImagePlayerView: UIView {
         
         
         //获取将要现实的图片View的Z-index
-        let willShowView = imageViews[images.count - 1 - index]
+        let willShowView = imageViews[imageViews.count - 1 - index]
         let willShowViewIndex = (self.subviews as NSArray).indexOfObject(willShowView)
         
         // 隐藏上层的View
@@ -296,14 +324,14 @@ class ImagePlayerView: UIView {
             return
         }
         
-        if index  > images.count - 1 {
+        if index  > imageViews.count - 1 {
             
-            index = images.count - 1
+            index = imageViews.count - 1
             
             return
         }
         
-        if index  == images.count - 1 {
+        if index  == imageViews.count - 1 {
             
             index -= 1
             
@@ -356,7 +384,7 @@ class ImagePlayerView: UIView {
         
         if sender.direction == UISwipeGestureRecognizerDirection.Right {
             
-            if index < images.count - 1 {
+            if index < imageViews.count - 1 {
                 
                 index += 1
             }
