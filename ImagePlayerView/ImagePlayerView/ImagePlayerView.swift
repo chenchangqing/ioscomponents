@@ -8,6 +8,12 @@
 
 import UIKit
 
+enum PlayOrder {
+    
+    case Desc
+    case Asc
+}
+
 class ImagePlayerView: UIView {
     
     var images = [UIImage]()                      // 图片数组
@@ -30,6 +36,17 @@ class ImagePlayerView: UIView {
                 switchImage(newValue)
             }
         }
+        
+        didSet {
+            
+            if index >= oldValue {
+                
+                order = .Asc
+            } else {
+                
+                order = .Desc
+            }
+        }
     }
     
     var currentPageIndicatorTintColor = UIColor.magentaColor() {
@@ -46,11 +63,14 @@ class ImagePlayerView: UIView {
         }
     }
     
+    var duration: NSTimeInterval = 4
+    
     private let kImageView  = "imageView"
     private var imageViews  = [TransformFadeView]()
     private var pageControl : UIPageControl!
     private var pageControlConstraints = [NSLayoutConstraint]()
-    
+    private var timer : NSTimer!
+    private var order : PlayOrder = .Asc
     
     // MARK: -
     
@@ -69,6 +89,14 @@ class ImagePlayerView: UIView {
     // MARK: - setup
     
     private func setup() {
+        
+        setupPageControl()
+        
+        // 定时器
+        timer = NSTimer.scheduledTimerWithTimeInterval(duration, target: self, selector: Selector("timerEvent"), userInfo: nil, repeats: true)
+    }
+    
+    private func setupPageControl() {
         
         // 创建pageControl
         pageControl = UIPageControl()
@@ -165,5 +193,33 @@ class ImagePlayerView: UIView {
         // 设置pageControl
         pageControl.currentPage = index
         
+    }
+    
+    /**
+     * 定时轮播
+     */
+    func timerEvent() {
+        
+        if index  == 0 {
+            
+            index += 1
+            
+            return
+        }
+        
+        if index  == images.count - 1 {
+            
+            index -= 1
+            
+            return
+        }
+        
+        if order == .Asc {
+            
+            index += 1
+        } else {
+            
+            index -= 1
+        }
     }
 }

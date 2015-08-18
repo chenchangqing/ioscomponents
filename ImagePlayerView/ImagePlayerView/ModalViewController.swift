@@ -14,8 +14,6 @@ class ModalViewController: UIViewController {
     
     private var images = [UIImage]()      // 图片视图
     
-    private var timer : NSTimer!
-    
     // MARK: - 
     
     override func viewDidLoad() {
@@ -42,14 +40,6 @@ class ModalViewController: UIViewController {
         
         // 设置图片
         imagePlayerView.images = images
-        
-        // 设置定时器
-        timer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: Selector("timerEvent"), userInfo: nil, repeats: true)
-    }
-    
-    func timerEvent() {
-        
-        imagePlayerView.index = Int(arc4random() % 4)
     }
 
 }
