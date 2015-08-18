@@ -58,5 +58,10 @@ class ModalViewController: UIViewController, ImagePlayerViewDelegate {
         
         imageView.image = images[index]
     }
+    
+    func imagePlayerView(imagePlayerView: ImagePlayerView, didTapAtIndex index: Int) {
+        
+        println("didTapAtIndex:\(index)")
+    }
 
 }

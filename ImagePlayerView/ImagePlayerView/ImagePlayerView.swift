@@ -23,6 +23,11 @@ protocol ImagePlayerViewDelegate :NSObjectProtocol {
      */
     func imagePlayerView(imagePlayerView:ImagePlayerView, imageView:UIImageView, index:Int)
     
+    /**
+     * 图片点击事件
+     */
+    func imagePlayerView(imagePlayerView:ImagePlayerView, didTapAtIndex index:Int)
+    
 }
 
 enum PlayOrder {
@@ -135,6 +140,7 @@ class ImagePlayerView: UIView {
     private var order : PlayOrder = .Asc
     private var leftSwipeGestureRecognizer:UISwipeGestureRecognizer!
     private var rightSwipeGestureRecognizer:UISwipeGestureRecognizer!
+    private var singleRecognizer:UITapGestureRecognizer!
     
     // MARK: -
     
@@ -193,12 +199,15 @@ class ImagePlayerView: UIView {
         
         leftSwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
         rightSwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
+        singleRecognizer = UITapGestureRecognizer(target: self, action: Selector("handleSingleTap:"))
         
         leftSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirection.Left
         rightSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirection.Right
+        singleRecognizer.numberOfTapsRequired = 1
         
         self.addGestureRecognizer(leftSwipeGestureRecognizer)
         self.addGestureRecognizer(rightSwipeGestureRecognizer)
+        self.addGestureRecognizer(singleRecognizer)
     }
     
     // MARK: -
@@ -388,6 +397,17 @@ class ImagePlayerView: UIView {
                 
                 index += 1
             }
+        }
+    }
+    
+    /**
+     * 单击手势
+     */
+    func handleSingleTap(sender:UITapGestureRecognizer) {
+        
+        if let delegate = delegate {
+            
+            delegate.imagePlayerView(self, didTapAtIndex: index)
         }
     }
 }
