@@ -245,10 +245,11 @@ class ImagePlayerView: UIView {
         
         
         //获取将要现实的图片View的Z-index
-        let currentIndex = (self.subviews as NSArray).indexOfObject(imageViews[images.count - 1 - index])
+        let willShowView = imageViews[images.count - 1 - index]
+        let willShowViewIndex = (self.subviews as NSArray).indexOfObject(willShowView)
         
         // 隐藏上层的View
-        for (var i = self.subviews.count - 1;i>currentIndex; i--) {
+        for (var i = self.subviews.count - 1;i>willShowViewIndex; i--) {
             
             if let imageView = self.subviews[i] as? TransformFadeView {
                 
@@ -260,7 +261,7 @@ class ImagePlayerView: UIView {
         }
         
         // 显示下层的View直到显示当前的为止
-        for (var i = 0; i<=currentIndex; i++) {
+        for (var i = 0; i<=willShowViewIndex; i++) {
             
             if let imageView = self.subviews[i] as? TransformFadeView {
                 
@@ -347,12 +348,18 @@ class ImagePlayerView: UIView {
         
         if sender.direction == UISwipeGestureRecognizerDirection.Left {
             
-            index -= 1
+            if index > 0 {
+                
+                index -= 1
+            }
         }
         
         if sender.direction == UISwipeGestureRecognizerDirection.Right {
             
-            index += 1
+            if index < images.count - 1 {
+                
+                index += 1
+            }
         }
     }
 }
