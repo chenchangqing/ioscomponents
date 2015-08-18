@@ -155,15 +155,14 @@ class ImagePlayerView: UIView {
         pageControl.setTranslatesAutoresizingMaskIntoConstraints(false)
         pageControl.pageIndicatorTintColor = pageIndicatorTintColor
         pageControl.currentPageIndicatorTintColor = currentPageIndicatorTintColor
-        pageControl.backgroundColor = UIColor.purpleColor()
         self.addSubview(pageControl)
         
         // pageControl 事件
         pageControl.addTarget(self, action: Selector("handleClickPageControl:"), forControlEvents: UIControlEvents.TouchUpInside)
         
         // 约束
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[pageControl]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: ["pageControl":pageControl]))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[pageControl]-|", options: NSLayoutFormatOptions(0), metrics: nil, views: ["pageControl":pageControl]))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[pageControl(50)]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: ["pageControl":pageControl]))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[pageControl]-|", options: NSLayoutFormatOptions(0), metrics: nil, views: ["pageControl":pageControl]))
     }
     
     private func setupTimer() {
