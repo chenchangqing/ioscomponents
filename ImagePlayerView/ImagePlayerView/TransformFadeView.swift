@@ -66,7 +66,7 @@ class TransformFadeView: UIImageView {
         // 计算
         caculate()
         
-        // 设置kvo
+        // 设置kvo 自适应
         self.addObserver(self, forKeyPath: "bounds", options: NSKeyValueObservingOptions.New, context: nil)
     }
     
@@ -79,6 +79,9 @@ class TransformFadeView: UIImageView {
     }
     
     private func caculate() {
+        
+        // 重新设置maskLayer frame
+        maskLayer.frame = self.bounds
         
         // 移除子maskLayer
         for layer in submaskLayers {

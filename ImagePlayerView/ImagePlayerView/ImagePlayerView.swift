@@ -32,8 +32,25 @@ class ImagePlayerView: UIView {
         }
     }
     
-    private let kImageView = "imageView"
-    var imageViews = [TransformFadeView]()
+    var currentPageIndicatorTintColor = UIColor.magentaColor() {
+        
+        willSet {
+            pageControl.currentPageIndicatorTintColor = newValue
+        }
+    }
+    
+    var pageIndicatorTintColor        = UIColor.whiteColor() {
+        
+        willSet {
+            pageControl.pageIndicatorTintColor = newValue
+        }
+    }
+    
+    private let kImageView  = "imageView"
+    private var imageViews  = [TransformFadeView]()
+    private var pageControl : UIPageControl!
+    private var pageControlConstraints = [NSLayoutConstraint]()
+    
     
     // MARK: -
     
@@ -53,7 +70,17 @@ class ImagePlayerView: UIView {
     
     private func setup() {
         
-        self.backgroundColor = UIColor.redColor()
+        // 创建pageControl
+        pageControl = UIPageControl()
+        pageControl.userInteractionEnabled = true
+        pageControl.setTranslatesAutoresizingMaskIntoConstraints(false)
+        pageControl.pageIndicatorTintColor = pageIndicatorTintColor
+        pageControl.currentPageIndicatorTintColor = currentPageIndicatorTintColor
+        self.addSubview(pageControl)
+        
+        // 约束
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[pageControl]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: ["pageControl":pageControl]))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[pageControl]-|", options: NSLayoutFormatOptions(0), metrics: nil, views: ["pageControl":pageControl]))
     }
     
     // MARK: -
@@ -90,10 +117,15 @@ class ImagePlayerView: UIView {
             self.addSubview(imageView)
             
             // 增加约束
-            self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-5-[\(kImageView)\(i)]-5-|", options: NSLayoutFormatOptions(0), metrics: nil, views: imageViewDic))
-            self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-5-[\(kImageView)\(i)]-5-|", options: NSLayoutFormatOptions(0), metrics: nil, views: imageViewDic))
+            self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kImageView)\(i)]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: imageViewDic))
+            self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[\(kImageView)\(i)]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: imageViewDic))
             
         }
+        
+        // 设置pageControl层次
+        pageControl.numberOfPages = images.count
+        pageControl.currentPage = 0
+        self.bringSubviewToFront(pageControl)
     }
     
     /**
@@ -109,22 +141,29 @@ class ImagePlayerView: UIView {
         // 隐藏上层的View
         for (var i = self.subviews.count - 1;i>currentIndex; i--) {
             
-            let imageView = self.subviews[i] as! TransformFadeView
-            if !imageView.isHiding! {
+            if let imageView = self.subviews[i] as? TransformFadeView {
                 
-                imageView.hideAnimated(true)
+                if !imageView.isHiding! {
+                    
+                    imageView.hideAnimated(true)
+                }
             }
         }
         
         // 显示下层的View直到显示当前的为止
         for (var i = 0; i<=currentIndex; i++) {
             
-            let imageView = self.subviews[i] as! TransformFadeView
-            if imageView.isHiding! {
+            if let imageView = self.subviews[i] as? TransformFadeView {
                 
-                imageView.showAnimated(true)
+                if imageView.isHiding! {
+                    
+                    imageView.showAnimated(true)
+                }
             }
         }
+        
+        // 设置pageControl
+        pageControl.currentPage = index
         
     }
 }
