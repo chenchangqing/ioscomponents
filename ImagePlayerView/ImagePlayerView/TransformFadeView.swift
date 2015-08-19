@@ -12,7 +12,8 @@ class TransformFadeView: UIImageView {
     
     var verticalCount   : Int = 1               // 渐变方块垂直方向个数
     var horizontalCount : Int = 12              // 渐变方块水平方向个数
-    var duration        : NSTimeInterval = 1    // 渐变动画的时间
+    var duration        : NSTimeInterval = 0.5  // 渐变动画的时间(> 0)
+    var velocity        : NSTimeInterval = 0.1  // 渐变速度，值越大动画越慢(> 0)
     var isHiding        : Bool! {
         get {
         
@@ -136,7 +137,7 @@ class TransformFadeView: UIImageView {
                 opacityAnimationHide.fromValue      = 1.0
                 opacityAnimationHide.toValue        = 0.0
                 opacityAnimationHide.duration       = self.duration
-                opacityAnimationHide.beginTime      = CFTimeInterval(i) * 0.2 + CACurrentMediaTime()
+                opacityAnimationHide.beginTime      = CFTimeInterval(i) * velocity + CACurrentMediaTime()
                 opacityAnimationHide.removedOnCompletion = false
                 // 当动画结束后,layer会一直保持着动画最后的状态
                 opacityAnimationHide.fillMode = kCAFillModeForwards
@@ -172,7 +173,7 @@ class TransformFadeView: UIImageView {
                 opacityAnimationShow.fromValue      = 0.0
                 opacityAnimationShow.toValue        = 1.0
                 opacityAnimationShow.duration       = self.duration
-                opacityAnimationShow.beginTime      = CFTimeInterval(i) * 0.2 + CACurrentMediaTime()
+                opacityAnimationShow.beginTime      = CFTimeInterval(i) * velocity + CACurrentMediaTime()
                 opacityAnimationShow.removedOnCompletion = false
                 //  当动画结束后,layer会一直保持着动画最后的状态
                 opacityAnimationShow.fillMode = kCAFillModeForwards
