@@ -42,24 +42,25 @@ class ViewController: UIViewController {
     /**
      * 获得数据源
      */
-    private func getDataSource() -> [String:[[String:String]]] {
+    private func getDataSource() -> [CJCollectionViewHeaderModel:[CJCollectionViewCellModel]] {
         
         // 单例
         struct DataSourceSingleton{
             static var predicate:dispatch_once_t = 0
-            static var instance:[String:[[String:String]]]!
+            static var instance:[CJCollectionViewHeaderModel:[CJCollectionViewCellModel]]!
         }
         
         dispatch_once(&DataSourceSingleton.predicate, { () -> Void in
             
-            DataSourceSingleton.instance = [String:[[String:String]]]()
+            DataSourceSingleton.instance = [CJCollectionViewHeaderModel:[CJCollectionViewCellModel]]()
             
             let filePath = NSBundle.mainBundle().pathForResource("data", ofType: "json")!
             let data     = NSFileManager.defaultManager().contentsAtPath(filePath)
             var error:NSError?
             if let data = data {
                 
-                DataSourceSingleton.instance = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &error) as? [String:[[String:String]]]
+                let dataSource = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &error)
+                println(dataSource)
             }
         })
         

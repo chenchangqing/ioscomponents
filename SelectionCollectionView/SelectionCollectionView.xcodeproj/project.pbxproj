@@ -19,6 +19,8 @@
 		E6EBD79D1B86E662008DC51D /* UIButton+CollectionCellStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = E6EBD79C1B86E662008DC51D /* UIButton+CollectionCellStyle.m */; };
 		E6EBD79F1B86FB53008DC51D /* CJSelectionCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EBD79E1B86FB53008DC51D /* CJSelectionCollectionView.swift */; };
 		E6EBD7A11B871070008DC51D /* data.json in Resources */ = {isa = PBXBuildFile; fileRef = E6EBD7A01B871070008DC51D /* data.json */; };
+		E6EBD7A31B8719FA008DC51D /* CJCollectionViewHeaderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EBD7A21B8719FA008DC51D /* CJCollectionViewHeaderModel.swift */; };
+		E6EBD7A51B871A15008DC51D /* CJCollectionViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EBD7A41B871A15008DC51D /* CJCollectionViewCellModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,8 @@
 		E6EBD79C1B86E662008DC51D /* UIButton+CollectionCellStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+CollectionCellStyle.m"; sourceTree = "<group>"; };
 		E6EBD79E1B86FB53008DC51D /* CJSelectionCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CJSelectionCollectionView.swift; sourceTree = "<group>"; };
 		E6EBD7A01B871070008DC51D /* data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = data.json; sourceTree = "<group>"; };
+		E6EBD7A21B8719FA008DC51D /* CJCollectionViewHeaderModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CJCollectionViewHeaderModel.swift; sourceTree = "<group>"; };
+		E6EBD7A41B871A15008DC51D /* CJCollectionViewCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CJCollectionViewCellModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +137,7 @@
 		E6EBD78D1B86E4A7008DC51D /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				E6EBD7A61B87217F008DC51D /* Model */,
 				E6EBD79A1B86E652008DC51D /* Category */,
 				E6EBD78E1B86E4A7008DC51D /* UICollectionViewLeftAlignedLayout */,
 				E6EBD7921B86E591008DC51D /* CJCollectionViewCell.swift */,
@@ -158,6 +163,15 @@
 				E6EBD79C1B86E662008DC51D /* UIButton+CollectionCellStyle.m */,
 			);
 			path = Category;
+			sourceTree = "<group>";
+		};
+		E6EBD7A61B87217F008DC51D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E6EBD7A21B8719FA008DC51D /* CJCollectionViewHeaderModel.swift */,
+				E6EBD7A41B871A15008DC51D /* CJCollectionViewCellModel.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -264,9 +278,11 @@
 				E6EBD76F1B86E3FD008DC51D /* ViewController.swift in Sources */,
 				E6EBD7931B86E591008DC51D /* CJCollectionViewCell.swift in Sources */,
 				E6EBD7911B86E4A7008DC51D /* UICollectionViewLeftAlignedLayout.m in Sources */,
+				E6EBD7A51B871A15008DC51D /* CJCollectionViewCellModel.swift in Sources */,
 				E6EBD7951B86E5BE008DC51D /* CJCollectionViewHeader.swift in Sources */,
 				E6EBD76D1B86E3FD008DC51D /* AppDelegate.swift in Sources */,
 				E6EBD79D1B86E662008DC51D /* UIButton+CollectionCellStyle.m in Sources */,
+				E6EBD7A31B8719FA008DC51D /* CJCollectionViewHeaderModel.swift in Sources */,
 				E6EBD79F1B86FB53008DC51D /* CJSelectionCollectionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

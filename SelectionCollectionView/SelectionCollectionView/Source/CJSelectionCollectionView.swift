@@ -13,7 +13,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     /**
      * 数据源
      */
-    var dataSource = [String:[[String:String]]]() {
+    var dataSource = [CJCollectionViewHeaderModel:[CJCollectionViewCellModel]]() {
         
         didSet {
             
@@ -51,9 +51,6 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     
     // MARK: - Constants
     
-    private let kDataSourceCellTitleKey                 = "Food_Name"   // cell title key
-    private let kDataSourceCellIconKey                  = "Picture"    // cell icon  key
-    
     private let kCellIdentifier             = "CellIdentifier"                // 重用单元格ID
     private let kHeaderViewCellIdentifier   = "HeaderViewCellIdentifier"      // 重用标题ID
     private let kCollectionView             = "collectionView"                // 增加约束时使用
@@ -85,7 +82,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     /**
      * 返回指定节的key
      */
-    private func keyForSection(section:Int) -> String {
+    private func keyForSection(section:Int) -> CJCollectionViewHeaderModel {
         
         return dataSource.keys.array[section]
     }
@@ -93,7 +90,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     /**
      * 返回指定节的数据数组
      */
-    private func arrayForSection(section:Int) -> [[String:String]] {
+    private func arrayForSection(section:Int) -> [CJCollectionViewCellModel] {
         
         return dataSource[keyForSection(section)]!
     }
@@ -101,7 +98,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     /**
      * 返回指定cell的数据字典
      */
-    private func dictionaryForRow(indexPath:NSIndexPath) -> [String:String] {
+    private func dictionaryForRow(indexPath:NSIndexPath) -> CJCollectionViewCellModel {
         
         return arrayForSection(indexPath.section)[indexPath.row]
     }
@@ -152,14 +149,14 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         
         // 处理数据
         let item            = dictionaryForRow(indexPath)
-        let cellTitle       = item[kDataSourceCellTitleKey]
-        let cellIcon        = item[kDataSourceCellIconKey]
+        let cellTitle       = item.title
+        let cellIcon        = item.icon
         
         // 文字
         cell.title = cellTitle
         if let cellIcon = cellIcon {
             
-            cell.icon = UIImage(named: cellIcon)
+            cell.icon = cellIcon
         }
         
         return cell
@@ -181,8 +178,8 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         let header = collectionView.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionHeader, withReuseIdentifier: kHeaderViewCellIdentifier, forIndexPath: indexPath) as! CJCollectionViewHeader
         
         // 处理数据
-        header.titleButtonTitle = keyForSection(indexPath.section)
-        header.titleButtonIcon  = UIImage(named: "home_btn_cosmetic")
+        header.titleButtonTitle = keyForSection(indexPath.section).title
+        header.titleButtonIcon  = keyForSection(indexPath.section).icon
         
         return header
     }

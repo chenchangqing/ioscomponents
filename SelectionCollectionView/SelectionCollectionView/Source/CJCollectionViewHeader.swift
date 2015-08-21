@@ -178,7 +178,6 @@ class CJCollectionViewHeader: UICollectionReusableView {
         titleButton.titleLabel?.textAlignment = NSTextAlignment.Left
         titleButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
         titleButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Selected)
-        titleButton.setImage(UIImage(named: "home_btn_cosmetic"), forState: UIControlState.Normal)
         
         // add to View
         self.addSubview(titleButton)

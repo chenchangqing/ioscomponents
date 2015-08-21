@@ -22,8 +22,8 @@ class CJCollectionViewCell: UICollectionViewCell {
             
             if let newValue = newValue {
                 
-                button.setImage(UIImage(named: "home_btn_shrink"), forState: UIControlState.Normal)
-                button.setImage(UIImage(named: "home_btn_shrink"), forState: UIControlState.Selected)
+                button.setImage(newValue, forState: UIControlState.Normal)
+                button.setImage(newValue, forState: UIControlState.Selected)
             } else {
                 
                 button.setImage(nil, forState: UIControlState.Normal)
