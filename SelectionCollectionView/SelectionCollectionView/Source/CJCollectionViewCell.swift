@@ -72,11 +72,18 @@ class CJCollectionViewCell: UICollectionViewCell {
         setup()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        changePaddingBetweenIconAndTitle()
+    }
+    
     // MARK: - setup
     
     private func setup() {
         
         setupButton()
+        self.backgroundColor = UIColor.redColor()
     }
     
     private func setupButton() {

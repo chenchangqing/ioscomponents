@@ -8,6 +8,11 @@
 
 import UIKit
 
+@objc protocol CJCollectionViewHeaderDelegate {
+    
+    func collectionViewHeaderMoreBtnClicked(sender:UIButton)
+}
+
 /**
  * collectionView header
  */
@@ -56,6 +61,41 @@ class CJCollectionViewHeader: UICollectionReusableView {
             
         }
     }
+    
+    /**
+     * section
+     */
+    var section:Int = 0 {
+        
+        willSet {
+            
+            moreButton.tag = newValue
+        }
+    }
+    
+    /**
+     * 是否隐藏更多按钮
+     */
+    var moreButtonHidden : Bool = false {
+        
+        willSet {
+            
+            moreButton.hidden = newValue
+        }
+    }
+    
+    /** 
+     * 更多按钮是否被选中
+     */
+    var moreButtonSelected : Bool = false {
+        
+        willSet {
+            
+            moreButton.selected = newValue
+        }
+    }
+    
+    var delegate:CJCollectionViewHeaderDelegate?
     
     private var titleButton : UIButton! // 标题按钮
     private var clearButton : UIButton! // 清除按钮
@@ -145,8 +185,11 @@ class CJCollectionViewHeader: UICollectionReusableView {
         constrainsViewDic[kMoreButton] = moreButton
         
         moreButton.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kMoreButton)]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kMoreButton)]-\(kLineHeight)-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[\(kMoreButton)(\(kMoreButtonWidth))]-\(rightMargin)-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
+        
+        // event
+        moreButton.addTarget(self, action: Selector("moreBtnClicked:"), forControlEvents: UIControlEvents.TouchUpInside)
     }
     
     private func setupClearButton() {
@@ -166,7 +209,7 @@ class CJCollectionViewHeader: UICollectionReusableView {
         constrainsViewDic[kClearButton] = clearButton
         
         clearButton.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kClearButton)]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kClearButton)]-\(kLineHeight)-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[\(kClearButton)(\(kClearButtonWidth))]-8-[\(kMoreButton)]", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
     }
     
@@ -186,7 +229,7 @@ class CJCollectionViewHeader: UICollectionReusableView {
         constrainsViewDic[kTitleButton] = titleButton
         
         titleButton.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kTitleButton)]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kTitleButton)]-\(kLineHeight)-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-\(leftMargin)-[\(kTitleButton)]-8-[\(kClearButton)]", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
     }
     
@@ -203,8 +246,18 @@ class CJCollectionViewHeader: UICollectionReusableView {
         constrainsViewDic[kLine] = line
         
         line.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[\(kLine)]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[\(kLine)(\(kLineHeight))]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-\(leftMargin)-[\(kLine)]-\(rightMargin)-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
+    }
+    
+    // MARK: - moreBtn clicked
+    
+    func moreBtnClicked(sender:UIButton) {
+        
+        if let delegate=delegate {
+            
+            delegate.collectionViewHeaderMoreBtnClicked(sender)
+        }
     }
     
 }

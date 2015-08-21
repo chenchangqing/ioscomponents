@@ -10,12 +10,12 @@ import UIKit
 
 class CJCollectionViewCellModel: NSObject, NSCopying {
    
-    var icon : UIImage? // 图片
+    var icon : String? // 图片
     var title : String? // 标题
     
     // MARK: -
     
-    init(icon: UIImage?, title: String?) {
+    init(icon: String?, title: String?) {
         
         self.icon = icon
         self.title = title

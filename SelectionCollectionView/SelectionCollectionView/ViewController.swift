@@ -34,7 +34,9 @@ class ViewController: UIViewController {
     
     private func setupSelectionCollectionView() {
         
-        selectionCollectionView.dataSource = getDataSource()
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(NSEC_PER_SEC * 1)), dispatch_get_main_queue(), { () -> Void in
+            self.selectionCollectionView.dataSource = self.getDataSource()
+        })
     }
     
     // MARK: -
@@ -59,8 +61,32 @@ class ViewController: UIViewController {
             var error:NSError?
             if let data = data {
                 
-                let dataSource = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &error)
-                println(dataSource)
+                let dataSource = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &error) as! [String:[[String:String]]]
+                
+                for key in dataSource.keys.array {
+                    
+                    let keyData = key.dataUsingEncoding(NSUTF8StringEncoding)!
+                    let keyDic  = NSJSONSerialization.JSONObjectWithData(keyData, options: NSJSONReadingOptions.MutableContainers, error: nil) as! [String:String]
+                    
+                    let icon = keyDic["icon"]
+                    let title = keyDic["title"]
+                    
+                    let headerModel = CJCollectionViewHeaderModel(icon: icon, title: title)
+                    
+                    var cellModels = [CJCollectionViewCellModel]()
+                    let cellArray  = dataSource[key]!
+                    
+                    for cellDic in cellArray {
+                        
+                        let icon = cellDic["icon"]
+                        let title = cellDic["title"]
+                        
+                        let cellModel = CJCollectionViewCellModel(icon: icon, title: title)
+                        cellModels.append(cellModel)
+                    }
+                    
+                    DataSourceSingleton.instance[headerModel] = cellModels
+                }
             }
         })
         
