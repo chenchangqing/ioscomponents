@@ -83,7 +83,6 @@ class CJCollectionViewCell: UICollectionViewCell {
     private func setup() {
         
         setupButton()
-        self.backgroundColor = UIColor.redColor()
     }
     
     private func setupButton() {

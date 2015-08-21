@@ -17,11 +17,6 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         
         didSet {
             
-            cellCountDictionary = caculateCellCountForEveryRowInSection()
-            defaultCellCountForSectionDictionary = caculateDefaultCellCountForSection()
-            isShowMoreBtnDictionary = caculateIsShowMoreBtn()
-            expandSectionArray = [CJCollectionViewHeaderModel:Bool]()
-            
             collectionView.reloadData()
         }
     }
@@ -29,55 +24,88 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     /**
      * collection View 左边距
      */
-    var collectionViewLeftMargin : CGFloat = 16
+    var collectionViewLeftMargin : CGFloat = 16  {
+        
+        didSet {
+            
+            collectionView.reloadData()
+        }
+    }
     
     /**
      * collection View 右边距
      */
-    var collectionViewRightMargin : CGFloat = 16
+    var collectionViewRightMargin : CGFloat = 16 {
+        
+        didSet {
+            
+            collectionView.reloadData()
+        }
+    }
     
     /**
      * collection View 上边距
      */
-    var collectionViewTopMargin : CGFloat = 8
+    var collectionViewTopMargin : CGFloat = 8 {
+        
+        didSet {
+            
+            collectionView.reloadData()
+        }
+    }
     
     /**
      * collection View 下边距
      */
-    var collectionViewBottomMargin : CGFloat = 8
+    var collectionViewBottomMargin : CGFloat = 8 {
+        
+        didSet {
+            
+            collectionView.reloadData()
+        }
+    }
     
     /**
      * cell 之间的水平间距
      */
-    var cellHorizontalMargin : CGFloat = 12
+    var cellHorizontalMargin : CGFloat = 12 {
+        
+        didSet {
+            
+            collectionView.reloadData()
+        }
+    }
     
     /**
      * cell 可以改变cell中内容到左右边界的距离
      */
-    var cellHorizontalPadding : CGFloat = 16
+    var cellHorizontalPadding : CGFloat = 16 {
+        
+        didSet {
+            
+            collectionView.reloadData()
+        }
+    }
     
     /**
      * 默认显示行数
      */
-    var defaultRows:Int = 1
+    var defaultRows:Int = 1 {
+        
+        didSet {
+            
+            collectionView.reloadData()
+        }
+    }
     
     private var collectionView : UICollectionView!
     // 每个分类下有几行，每行有几个cell
-    private lazy var cellCountDictionary :[CJCollectionViewHeaderModel:[Int]] = {
-
-        return self.caculateCellCountForEveryRowInSection()
-    }()
+    private var cellCountDictionary :[CJCollectionViewHeaderModel:[Int]]!
     
     // 每个分类下默认显示行包含的cell数量
-    private lazy var defaultCellCountForSectionDictionary :[CJCollectionViewHeaderModel:Int] = {
-        
-        return self.caculateDefaultCellCountForSection()
-    }()
+    private var defaultCellCountForSectionDictionary :[CJCollectionViewHeaderModel:Int]!
     // 每个分类下是否应该显示更多按钮字典
-    private lazy var isShowMoreBtnDictionary :[CJCollectionViewHeaderModel:Bool] = {
-       
-        return self.caculateIsShowMoreBtn()
-    }()
+    private var isShowMoreBtnDictionary :[CJCollectionViewHeaderModel:Bool]!
     
     // 每个分类下是否已经被展开
     private lazy var expandSectionArray = [CJCollectionViewHeaderModel:Bool]()
@@ -102,6 +130,17 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         super.init(frame: frame)
         
         setup()
+    }
+    
+    override func layoutSubviews() {
+        
+        super.layoutSubviews()
+        
+        // 计算
+        cellCountDictionary = caculateCellCountForEveryRowInSection()
+        defaultCellCountForSectionDictionary = caculateDefaultCellCountForSection()
+        isShowMoreBtnDictionary = caculateIsShowMoreBtn()
+        expandSectionArray = [CJCollectionViewHeaderModel:Bool]()
     }
     
     // MARK: - setup
@@ -241,6 +280,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         
         // 是否显示更多
         let key = keyForSection(indexPath.section)
+        
         header.moreButtonHidden = !isShowMoreBtnDictionary[key]!
         
         // 设置更多按钮的状态
