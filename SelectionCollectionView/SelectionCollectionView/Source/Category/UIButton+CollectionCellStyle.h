@@ -12,6 +12,7 @@
 
 - (void)generalStyle;
 - (void)homeStyle;
+- (void)selectionStyle;
 - (void)redStyle;
 
 @end

@@ -28,6 +28,13 @@
     self.layer.borderColor = [UIColor colorWithRed:18/255.0 green:133/255.0 blue:117/255.0 alpha:1].CGColor;
 }
 
+- (void)selectionStyle {
+    self.titleLabel.font = [UIFont systemFontOfSize:15];
+    [self setTitleColor:[UIColor colorWithRed:18/255.0 green:133/255.0 blue:117/255.0 alpha:1] forState:UIControlStateNormal];
+    [self setTitleColor:[UIColor magentaColor] forState:UIControlStateSelected];
+    self.layer.borderColor = [UIColor colorWithRed:18/255.0 green:133/255.0 blue:117/255.0 alpha:1].CGColor;
+}
+
 - (void)redStyle {
     self.titleLabel.font = [UIFont systemFontOfSize:15];
     [self setTitleColor:[UIColor colorWithRed:160/255.0 green:15/255.0 blue:85/255.0 alpha:1] forState:UIControlStateNormal];

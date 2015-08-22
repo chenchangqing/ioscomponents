@@ -8,6 +8,11 @@
 
 import UIKit
 
+@objc protocol CJCollectionViewCellDelegate {
+    
+    func collectionViewCellClicked(sender:CJCollectionViewCellButton)
+}
+
 /**
  * collectionView cell button
  */
@@ -79,6 +84,11 @@ class CJCollectionViewCell: UICollectionViewCell {
         }
     }
     
+    /**
+     * delegate
+     */
+    var delegate : CJCollectionViewCellDelegate?
+    
     // MARK: - Private
     
     private var button: CJCollectionViewCellButton!
@@ -116,6 +126,9 @@ class CJCollectionViewCell: UICollectionViewCell {
         
         setupButton()
         
+//        let backgroundView = UIView()
+//        backgroundView.backgroundColor = UIColor.redColor()
+//        self.selectedBackgroundView = backgroundView
     }
     
     private func setupButton() {
@@ -123,8 +136,8 @@ class CJCollectionViewCell: UICollectionViewCell {
         // create
         button = CJCollectionViewCellButton()
         button.generalStyle()
-        button.homeStyle()
-        button.userInteractionEnabled = false
+        button.selectionStyle()
+        button.userInteractionEnabled = true
         
         // add
         contentView.addSubview(button)
@@ -133,6 +146,9 @@ class CJCollectionViewCell: UICollectionViewCell {
         button.setTranslatesAutoresizingMaskIntoConstraints(false)
         contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[button]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: ["button":button]))
         contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[button]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: ["button":button]))
+        
+        // event
+        button.addTarget(self, action: Selector("buttonClicked:"), forControlEvents: UIControlEvents.TouchUpInside)
     }
     
     // MARK: -
@@ -150,6 +166,15 @@ class CJCollectionViewCell: UICollectionViewCell {
             
             button.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0)
             button.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0)
+        }
+    }
+    
+    // MARK: - EVENT
+    
+    func buttonClicked(sender:CJCollectionViewCellButton) {
+        
+        if let delegate = delegate {
+            delegate.collectionViewCellClicked(sender)
         }
     }
 }

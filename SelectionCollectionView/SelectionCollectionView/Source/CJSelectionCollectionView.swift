@@ -8,14 +8,7 @@
 
 import UIKit
 
-enum CJSelectionCollectionViewType {
-    
-    case MultipleChoice // 多选
-    case SingleChoice   // 单选
-    case SingleClick    // 单击
-}
-
-class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelegate,CJCollectionViewHeaderDelegate {
+class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelegate,CJCollectionViewHeaderDelegate,CJCollectionViewCellDelegate {
     
     /**
      * 数据源
@@ -23,6 +16,51 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     var dataSource = [CJCollectionViewHeaderModel:[CJCollectionViewCellModel]]() {
         
         didSet {
+            
+            // 根据分类类型是 多选 单选 单击，增加或删除 全部 选项
+            
+            let allChoiceModel = CJCollectionViewCellModel(icon: nil, title: kAllTitle ,selected: true)
+            
+            for (headerModel,var cellModels) in dataSource {
+                
+                switch (headerModel.type) {
+                case .MultipleChoice:
+                    
+                    let array = NSMutableArray(array: cellModels)
+                    if !array.containsObject(allChoiceModel) {
+                        
+                        cellModels.insert(allChoiceModel, atIndex: 0)
+                        dataSource[headerModel] = cellModels
+                    }
+                    
+                    break;
+                case .SingleChoice:
+                    
+                    let array = NSMutableArray(array: cellModels)
+                    if array.containsObject(allChoiceModel) {
+                        
+                        let allChoiceModelIndex = array.indexOfObject(allChoiceModel)
+                        cellModels.removeAtIndex(allChoiceModelIndex)
+                        dataSource[headerModel] = cellModels
+                    }
+                    
+                    break;
+                case .SingleClick:
+                    
+                    let array = NSMutableArray(array: cellModels)
+                    if array.containsObject(allChoiceModel) {
+                        
+                        let allChoiceModelIndex = array.indexOfObject(allChoiceModel)
+                        cellModels.removeAtIndex(allChoiceModelIndex)
+                        dataSource[headerModel] = cellModels
+                    }
+                    
+                    break;
+
+                default:
+                    break;
+                }
+            }
             
             collectionView.reloadData()
         }
@@ -86,7 +124,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     /**
      * cell 可以改变cell中内容到左右边界的距离
      */
-    var cellHorizontalPadding : CGFloat = 16 {
+    var cellHorizontalPadding : CGFloat = 20 {
         
         didSet {
             
@@ -117,36 +155,9 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     }
     
     /**
-     * 类型
+     * 点击单元格事件
      */
-    var type : CJSelectionCollectionViewType = .SingleClick {
-        
-        willSet {
-            
-            switch (newValue) {
-            case .SingleClick:
-                
-                collectionView.allowsSelection = false
-                
-                break;
-            case .MultipleChoice:
-                
-                collectionView.allowsSelection = true
-                collectionView.allowsMultipleSelection = true
-                
-                break;
-            case .SingleChoice:
-                
-                collectionView.allowsSelection = true
-                collectionView.allowsMultipleSelection = false
-                
-                break;
-                
-            default:
-                break;
-            }
-        }
-    }
+    var cellClicked : (cellModel:CJCollectionViewCellModel) -> Void = { celModel in }
     
     // MARK: - Private
     
@@ -181,6 +192,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     private let kHeaderViewCellIdentifier   = "HeaderViewCellIdentifier"      // 重用标题ID
     private let kCollectionView             = "collectionView"                // 增加约束时使用
     private let kCollectionViewCellHeight   : CGFloat          = 30           // cell height
+    private let kAllTitle                   = "全部"
     
     // MARK: -
     
@@ -224,8 +236,9 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         // 默认为黑色，这里设置为白色以便显示
         collectionView.backgroundColor = UIColor.whiteColor()
         
-        // 默认collectionView不可以选择
-        type = .SingleClick
+        // 默认collectionView多选
+        collectionView.allowsSelection = true
+        collectionView.allowsMultipleSelection = true
         
         // add collectionView
         self.addSubview(collectionView)
@@ -276,7 +289,136 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         
-        println(indexPath)
+        println("didSelectItemAtIndexPath:\(indexPath)")
+    }
+    
+    func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath) {
+        
+        println("didDeselectItemAtIndexPath:\(indexPath)")
+    }
+    
+    // MARK: - CJCollectionViewCellDelegate
+    
+    func collectionViewCellClicked(sender: CJCollectionViewCellButton) {
+        
+        let cellModel = dictionaryForRow(sender.indexPath)
+        
+        let headerModel = keyForSection(sender.indexPath.section)
+        
+        let cellModels = arrayForSection(sender.indexPath.section)
+        
+        let allChoiceModel = CJCollectionViewCellModel(icon: nil, title: kAllTitle)
+        
+        switch (headerModel.type) {
+        case .MultipleChoice:
+            
+            // 更新当前按钮model
+            cellModel.selected = !cellModel.selected
+            
+            // 当前点击的按钮为全部
+            if cellModel.title == kAllTitle {
+                
+                // 更新非全部按钮model
+                if cellModel.selected {
+                    
+                    for tempCellModel in cellModels{
+                        
+                        if !cellModel.isEqual(tempCellModel) {
+                            
+                            tempCellModel.selected = false
+                        }
+                    }
+                    
+                }
+            }
+            
+            // 当前点击的按钮非全部
+            if cellModel.title != kAllTitle {
+                
+                // 更新非全部按钮model
+                if cellModel.selected {
+                    
+                    // 是否全部选中
+                    var flag = true
+                    
+                    // 判断是否全部选中
+                    for tempCellModel in cellModels {
+                        
+                        if !tempCellModel.isEqual(allChoiceModel) && !tempCellModel.selected {
+                            
+                            flag = false
+                            break
+                        }
+                    }
+                    
+                    // 全部选中
+                    if flag {
+                        
+                        for tempCellModel in cellModels {
+                            
+                            if tempCellModel.isEqual(allChoiceModel) {
+                                
+                                tempCellModel.selected = true
+                                break
+                            }
+                        }
+                        
+                        for tempCellModel in cellModels {
+                            
+                            if !tempCellModel.isEqual(allChoiceModel) {
+                                
+                                tempCellModel.selected = false
+                            }
+                        }
+                    }
+                    
+                    // 没有全部选中
+                    if !flag {
+                        
+                        for tempCellModel in cellModels{
+                            
+                            if allChoiceModel.isEqual(tempCellModel) {
+                                
+                                tempCellModel.selected = false
+                            }
+                        }
+                    }
+                    
+                }
+            }
+            
+            // 更新当前分类
+            self.collectionView.reloadSections(NSIndexSet(index: sender.indexPath.section))
+            
+            break;
+        case .SingleChoice:
+            
+            cellModel.selected = !cellModel.selected
+            
+            if cellModel.selected {
+                
+                for tempCellModel in cellModels {
+                    
+                    if !tempCellModel.isEqual(cellModel) {
+                        
+                        tempCellModel.selected = false
+                    }
+                }
+            }
+            
+            // 更新当前分类
+            self.collectionView.reloadSections(NSIndexSet(index: sender.indexPath.section))
+            
+            break;
+        case .SingleClick:
+            
+            self.cellClicked(cellModel: cellModel)
+            
+            break;
+            
+        default:
+            break;
+        }
     }
     
     // MARK: - UICollectionViewDataSource
@@ -338,6 +480,12 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         
         // 设置cell的位置
         cell.indexPath = indexPath
+        
+        // delegate
+        cell.delegate = self
+        
+        // 设置按钮是否被选中
+        cell.selected = item.selected
         
         return cell
     }
