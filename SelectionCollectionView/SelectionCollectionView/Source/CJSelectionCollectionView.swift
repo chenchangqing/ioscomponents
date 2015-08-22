@@ -159,6 +159,54 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
      */
     var cellClicked : (cellModel:CJCollectionViewCellModel) -> Void = { celModel in }
     
+    /**
+     * 选中数组
+     */
+    var resultArray : [CJCollectionViewHeaderModel:[CJCollectionViewCellModel]] {
+
+     get {
+    
+        var resultArray = [CJCollectionViewHeaderModel:[CJCollectionViewCellModel]]()
+        
+        let allChoiceModel = CJCollectionViewCellModel(icon: nil, title: kAllTitle)
+        
+        for (headerModel,cellModels) in dataSource {
+            
+            if headerModel.type != .SingleClick {
+                
+                var tempCellModels = [CJCollectionViewCellModel]()
+                
+                for tempCellModel in cellModels {
+                    
+                    if tempCellModel.isEqual(allChoiceModel) {
+                        
+                        if tempCellModel.selected {
+                            
+                            let array = NSMutableArray(array: cellModels)
+                            let index = array.indexOfObject(allChoiceModel)
+                            tempCellModels = cellModels
+                            tempCellModels.removeAtIndex(index)
+                            
+                            break
+                        }
+                    } else {
+                        
+                        
+                        if tempCellModel.selected {
+                            
+                            tempCellModels.append(tempCellModel)
+                        }
+                    }
+                }
+                
+                resultArray[headerModel] = tempCellModels
+            }
+        }
+        
+        return resultArray
+     }
+    }
+    
     // MARK: - Private
     
     private var collectionView : UICollectionView!

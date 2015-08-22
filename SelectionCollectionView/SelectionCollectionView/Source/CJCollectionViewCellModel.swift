@@ -61,4 +61,12 @@ class CJCollectionViewCellModel: NSObject {
         
         return CJCollectionViewCellModel(icon: icon, title: title)
     }
+    
+    override var description: String {
+        
+        get {
+            
+            return "{cell.title:\(title!)}"
+        }
+    }
 }

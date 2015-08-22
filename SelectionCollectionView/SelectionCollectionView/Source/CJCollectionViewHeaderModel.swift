@@ -71,6 +71,14 @@ class CJCollectionViewHeaderModel: NSObject {
         return false
     }
     
+    override var description: String {
+        
+        get {
+            
+            return "{header.title:\(title!)}"
+        }
+    }
+    
     func copyWithZone(zone: NSZone) -> AnyObject {
         
         return CJCollectionViewHeaderModel(icon: icon, title: title)
