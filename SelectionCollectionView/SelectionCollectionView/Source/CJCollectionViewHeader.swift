@@ -86,13 +86,6 @@ class CJCollectionViewHeader: UICollectionReusableView {
         
         willSet {
             
-            if newValue {
-                
-                moreButtonWidthConstraint.constant = 4
-            } else {
-                
-                moreButtonWidthConstraint.constant = kMoreButtonWidth
-            }
             moreButton.hidden = newValue
         }
     }
@@ -135,7 +128,6 @@ class CJCollectionViewHeader: UICollectionReusableView {
     private var line        : UIView!   // 完美分割线
     
     private var constrainsViewDic = [String:UIView]() // 代码增加约束需要使用
-    private var moreButtonWidthConstraint : NSLayoutConstraint! // 更多按钮的宽约束
     private var moreButtonRightMarginConstraint : NSLayoutConstraint! // 更多按钮右边距约束
     private var titleButtonLeftMarginConstraint : NSLayoutConstraint! // 标题按钮左边距约束
     private var lineLeftMarginConstraint : NSLayoutConstraint! // 分割线左边距约束
@@ -236,7 +228,6 @@ class CJCollectionViewHeader: UICollectionReusableView {
         self.addConstraints(tempConstraints)
         
         // 保存moreButton width constrain
-        moreButtonWidthConstraint = tempConstraints[0]
         moreButtonRightMarginConstraint = tempConstraints[1]
         
         // event
