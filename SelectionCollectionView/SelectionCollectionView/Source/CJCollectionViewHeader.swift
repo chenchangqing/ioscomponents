@@ -11,6 +11,7 @@ import UIKit
 @objc protocol CJCollectionViewHeaderDelegate {
     
     func collectionViewHeaderMoreBtnClicked(sender:UIButton)
+    func collectionViewHeaderClearBtnClicked(sender:UIButton)
 }
 
 /**
@@ -49,6 +50,8 @@ class CJCollectionViewHeader: UICollectionReusableView {
     {
         willSet {
             
+            titleButtonLeftMarginConstraint.constant = newValue
+            lineLeftMarginConstraint.constant = newValue
         }
     }
     
@@ -59,6 +62,8 @@ class CJCollectionViewHeader: UICollectionReusableView {
     {
         willSet {
             
+            moreButtonRightMarginConstraint.constant = newValue
+            lineRightMarginConstraint.constant = newValue
         }
     }
     
@@ -70,6 +75,7 @@ class CJCollectionViewHeader: UICollectionReusableView {
         willSet {
             
             moreButton.tag = newValue
+            clearButton.tag = newValue
         }
     }
     
@@ -80,7 +86,31 @@ class CJCollectionViewHeader: UICollectionReusableView {
         
         willSet {
             
+            if newValue {
+                
+                moreButtonWidthConstraint.constant = 4
+            } else {
+                
+                moreButtonWidthConstraint.constant = kMoreButtonWidth
+            }
             moreButton.hidden = newValue
+        }
+    }
+    
+    /**
+    * 是否显示清空
+    */
+    var isShowClearButton = true {
+        
+        willSet {
+            
+            if newValue {
+                
+                clearButton.hidden = false
+            } else {
+                
+                clearButton.hidden = true
+            }
         }
     }
     
@@ -97,14 +127,22 @@ class CJCollectionViewHeader: UICollectionReusableView {
     
     var delegate:CJCollectionViewHeaderDelegate?
     
+    // MARK: - Private
+    
     private var titleButton : UIButton! // 标题按钮
     private var clearButton : UIButton! // 清除按钮
     private var moreButton  : UIButton! // 更多按钮
     private var line        : UIView!   // 完美分割线
     
     private var constrainsViewDic = [String:UIView]() // 代码增加约束需要使用
+    private var moreButtonWidthConstraint : NSLayoutConstraint! // 更多按钮的宽约束
+    private var moreButtonRightMarginConstraint : NSLayoutConstraint! // 更多按钮右边距约束
+    private var titleButtonLeftMarginConstraint : NSLayoutConstraint! // 标题按钮左边距约束
+    private var lineLeftMarginConstraint : NSLayoutConstraint! // 分割线左边距约束
+    private var lineRightMarginConstraint : NSLayoutConstraint! // 分割线右边距约束
     
     // MARK: - Constant
+    
     private let kLineHeight         : CGFloat = 0.5 // 分割线高度
     private let kClearButtonWidth   : CGFloat = 72  // 清除按钮宽度
     private let kMoreButtonWidth    : CGFloat = 72  // 更多按钮宽度
@@ -144,8 +182,15 @@ class CJCollectionViewHeader: UICollectionReusableView {
             0,
             -moreButton.titleLabel!.frame.size.width)
         
-        titleButton.titleEdgeInsets = UIEdgeInsetsMake(0, 16, 0, 0)
-        titleButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0 , 0, 0)
+        if let titleButtonIcon=titleButtonIcon {
+            
+            titleButton.titleEdgeInsets = UIEdgeInsetsMake(0, 16, 0, 0)
+            titleButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0 , 0, 0)
+        } else {
+            
+            titleButton.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0)
+            titleButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0 , 0, 0)
+        }
     }
     
     // MARK: - SETUP
@@ -186,7 +231,13 @@ class CJCollectionViewHeader: UICollectionReusableView {
         
         moreButton.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kMoreButton)]-\(kLineHeight)-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[\(kMoreButton)(\(kMoreButtonWidth))]-\(rightMargin)-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
+        
+        let tempConstraints = NSLayoutConstraint.constraintsWithVisualFormat("H:[\(kMoreButton)(\(kMoreButtonWidth))]-\(rightMargin)-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic) as! [NSLayoutConstraint]
+        self.addConstraints(tempConstraints)
+        
+        // 保存moreButton width constrain
+        moreButtonWidthConstraint = tempConstraints[0]
+        moreButtonRightMarginConstraint = tempConstraints[1]
         
         // event
         moreButton.addTarget(self, action: Selector("moreBtnClicked:"), forControlEvents: UIControlEvents.TouchUpInside)
@@ -196,8 +247,8 @@ class CJCollectionViewHeader: UICollectionReusableView {
         
         // create
         clearButton = UIButton()
-        clearButton.setTitle("清除", forState: UIControlState.Normal)
-        clearButton.setTitle("清除", forState: UIControlState.Selected)
+        clearButton.setTitle("清空", forState: UIControlState.Normal)
+        clearButton.setTitle("清空", forState: UIControlState.Selected)
         clearButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
         clearButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Selected)
         clearButton.titleLabel?.font = UIFont.systemFontOfSize(12)
@@ -211,6 +262,9 @@ class CJCollectionViewHeader: UICollectionReusableView {
         clearButton.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kClearButton)]-\(kLineHeight)-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[\(kClearButton)(\(kClearButtonWidth))]-8-[\(kMoreButton)]", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
+        
+        // event
+        clearButton.addTarget(self, action: Selector("clearBtnClicked:"), forControlEvents: UIControlEvents.TouchUpInside)
     }
     
     private func setupTitleButton() {
@@ -230,7 +284,12 @@ class CJCollectionViewHeader: UICollectionReusableView {
         
         titleButton.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kTitleButton)]-\(kLineHeight)-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-\(leftMargin)-[\(kTitleButton)]-8-[\(kClearButton)]", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
+        
+        let tempConstraints = NSLayoutConstraint.constraintsWithVisualFormat("H:|-\(leftMargin)-[\(kTitleButton)]-8-[\(kClearButton)]", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic)
+        self.addConstraints(tempConstraints)
+        
+        // save leftMarginConstraint
+        titleButtonLeftMarginConstraint = tempConstraints[0] as! NSLayoutConstraint
     }
     
     private func setupLine() {
@@ -247,16 +306,28 @@ class CJCollectionViewHeader: UICollectionReusableView {
         
         line.setTranslatesAutoresizingMaskIntoConstraints(false)
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[\(kLine)(\(kLineHeight))]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-\(leftMargin)-[\(kLine)]-\(rightMargin)-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
+        
+        let tempConstraints = NSLayoutConstraint.constraintsWithVisualFormat("H:|-\(leftMargin)-[\(kLine)]-\(rightMargin)-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic)
+        self.addConstraints(tempConstraints)
+        lineLeftMarginConstraint = tempConstraints[0] as! NSLayoutConstraint
+        lineRightMarginConstraint = tempConstraints[1] as! NSLayoutConstraint
     }
     
-    // MARK: - moreBtn clicked
+    // MARK: - event clicked
     
     func moreBtnClicked(sender:UIButton) {
         
         if let delegate=delegate {
             
             delegate.collectionViewHeaderMoreBtnClicked(sender)
+        }
+    }
+    
+    func clearBtnClicked(sender:UIButton) {
+        
+        if let delegate=delegate {
+            
+            delegate.collectionViewHeaderClearBtnClicked(sender)
         }
     }
     

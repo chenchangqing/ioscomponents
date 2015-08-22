@@ -98,22 +98,47 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         }
     }
     
+    /**
+     * 是否显示清空
+     */
+    var isShowClearButton = true {
+        
+        didSet {
+            
+            collectionView.reloadData()
+        }
+    }
+    
+    // MARK: - Private
+    
     private var collectionView : UICollectionView!
+    
     // 每个分类下有几行，每行有几个cell
     private var cellCountDictionary :[CJCollectionViewHeaderModel:[Int]]!
     
     // 每个分类下默认显示行包含的cell数量
     private var defaultCellCountForSectionDictionary :[CJCollectionViewHeaderModel:Int]!
+    
     // 每个分类下是否应该显示更多按钮字典
     private var isShowMoreBtnDictionary :[CJCollectionViewHeaderModel:Bool]!
     
     // 每个分类下是否已经被展开
-    private lazy var expandSectionArray = [CJCollectionViewHeaderModel:Bool]()
+    private var expandSectionArray = [CJCollectionViewHeaderModel:Bool]()
+    
+    // cell所能占据的最大宽度
+    private var limitWidth: CGFloat! {
+        
+        get {
+            
+            return CGRectGetWidth(collectionView.bounds) - collectionViewLeftMargin - collectionViewRightMargin
+        }
+    }
     
     
     // MARK: - Constants
     
     private let kCellIdentifier             = "CellIdentifier"                // 重用单元格ID
+    private let kCellIdentifierEmpty        = "CellIdentifierEmpty"           // 空单元格ID
     private let kHeaderViewCellIdentifier   = "HeaderViewCellIdentifier"      // 重用标题ID
     private let kCollectionView             = "collectionView"                // 增加约束时使用
     private let kCollectionViewCellHeight   : CGFloat          = 30           // cell height
@@ -137,10 +162,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         super.layoutSubviews()
         
         // 计算
-        cellCountDictionary = caculateCellCountForEveryRowInSection()
-        defaultCellCountForSectionDictionary = caculateDefaultCellCountForSection()
-        isShowMoreBtnDictionary = caculateIsShowMoreBtn()
-        expandSectionArray = [CJCollectionViewHeaderModel:Bool]()
+        caculate()
     }
     
     // MARK: - setup
@@ -168,6 +190,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         
         // 重用Cell、Header
         collectionView.registerClass(CJCollectionViewCell.self, forCellWithReuseIdentifier: kCellIdentifier)
+        collectionView.registerClass(CJCollectionViewEmptyCell.self, forCellWithReuseIdentifier: kCellIdentifierEmpty)
         collectionView.registerClass(CJCollectionViewHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: kHeaderViewCellIdentifier)
         
         // 设置collection代理为self
@@ -214,6 +237,13 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
      */
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
+        // 指定分类下没有数据时，设置一个空，此时返回1
+        if arrayForSection(section).count == 0 {
+            
+            return 1
+        }
+        
+        // 指定分类下有数据时，如果更多按钮状态为选中则显示所有cell，反之只显示默认行数下的cell
         let key = keyForSection(section)
         
         if let flag = expandSectionArray[key] {
@@ -232,6 +262,14 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
      */
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
+        // 指定分类下没有数据时，现实空cell
+        if arrayForSection(indexPath.section).count == 0 {
+            
+            let emptyCell = collectionView.dequeueReusableCellWithReuseIdentifier(kCellIdentifierEmpty, forIndexPath: indexPath) as! CJCollectionViewEmptyCell
+            return emptyCell
+        }
+        
+        // 指定分类下有数据时，现实正常的cell
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kCellIdentifier, forIndexPath: indexPath) as! CJCollectionViewCell
         
         // 处理数据
@@ -297,6 +335,13 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         // delegate
         header.delegate = self
         
+        // header 左右边距
+        header.leftMargin = collectionViewLeftMargin
+        header.rightMargin = collectionViewRightMargin
+        
+        // 是否显示清空按钮
+        header.isShowClearButton = isShowClearButton
+        
         return header
     }
     
@@ -307,6 +352,13 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
      */
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         
+        // 指定分类下没有数据时，设置cell width
+        if arrayForSection(indexPath.section).count == 0 {
+            
+            return CGSizeMake(limitWidth, kCollectionViewCellHeight)
+        }
+        
+        // 指定分类下有数据时，需要计算cell width
         let cellModel = dictionaryForRow(indexPath)
         let cellWidth = caculateCellWidth(cellModel)
         
@@ -347,13 +399,37 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         expandSectionArray[key] = sender.selected
         
         // 更新collectionView
+        reloadSection(sender.tag)
+    }
+    
+    func collectionViewHeaderClearBtnClicked(sender: UIButton) {
+        
+        let key = keyForSection(sender.tag)
+        
+        dataSource[key] = [CJCollectionViewCellModel]()
+        
+        // 计算
+        caculate()
+        
+        // 更新collectionView
+        reloadSection(sender.tag)
+    }
+    
+    /**
+     * 更新指定分类数据
+     * 
+     * @param section 分类位置
+     */
+    private func reloadSection(section:Int) {
+        
         collectionView.performBatchUpdates({ () -> Void in
             
-            let section = NSIndexSet(index: sender.tag)
+            let section = NSIndexSet(index: section)
             self.collectionView.reloadSections(section)
         }, completion: { (finished) -> Void in
                 
         })
+        
     }
     
     // MARK: - caculate
@@ -368,8 +444,6 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     private func caculateCellWidth(cellModel:CJCollectionViewCellModel) -> CGFloat {
         
         var cellWidth:CGFloat = 0
-        
-        let limitWidth = CGRectGetWidth(collectionView.frame) - collectionViewLeftMargin - collectionViewRightMargin
         
         if let title = cellModel.title {
             
@@ -397,42 +471,40 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
      *
      * @return cell所占据的最大宽度
      */
-    private func caculateCellLimitWidth (cellModel:CJCollectionViewCellModel,indexAtItems index:Int) -> CGFloat {
-        
-        let contentViewWidth = CGRectGetWidth(collectionView.frame) - collectionViewLeftMargin - collectionViewRightMargin
+    private func caculateCellSpaceWidth (cellModel:CJCollectionViewCellModel,indexAtItems index:Int) -> CGFloat {
         
         // 计算单元格cell的实际宽度
         let cellWidth = caculateCellWidth(cellModel)
         
         // 单元格占据的宽度，用于计算该单元格属于哪一行
-        var limitWidth : CGFloat!
+        var spaceWidth : CGFloat!
         
         // 如果cell的实际宽度等于最大限制宽度，那么cell占据宽度等于最大限制宽度
-        if cellWidth == contentViewWidth {
+        if cellWidth == limitWidth {
             
-            limitWidth = cellWidth
+            spaceWidth = cellWidth
         } else {
             
             // 如果单元格cell是数组中第一个，那么不需要+水平间距
             if index == 0 {
                 
-                limitWidth = cellWidth
+                spaceWidth = cellWidth
             } else {
                 
-                let contentViewWidth2 = contentViewWidth - cellHorizontalMargin
+                let limitWidth2 = limitWidth - cellHorizontalMargin
                 
-                if cellWidth >= contentViewWidth2 {
+                if cellWidth >= limitWidth2 {
                     
                     // 如果单元格item不是第一个，而且itemWidth大于最大限制宽度-水平间距，那么item占据宽度为最大限制
-                    limitWidth = contentViewWidth
+                    spaceWidth = limitWidth
                 } else {
                     
                     // 正常占据
-                    limitWidth = cellWidth + cellHorizontalMargin
+                    spaceWidth = cellWidth + cellHorizontalMargin
                 }
             }
         }
-        return limitWidth
+        return spaceWidth
     }
     
     /**
@@ -445,19 +517,18 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     private func caculateCellCountForFirstRow(cellModels:[CJCollectionViewCellModel]) -> Int {
         
         var cellCount: Int   = 0
-        let contentViewWidth = CGRectGetWidth(collectionView.frame) - collectionViewLeftMargin - collectionViewRightMargin
         
         let widthArray = NSMutableArray()
         
         for (var i=0; i<cellModels.count; i++) {
             
-            let limitWidth = caculateCellLimitWidth(cellModels[i], indexAtItems: i)
-            widthArray.addObject(limitWidth)
+            let spaceWidth = caculateCellSpaceWidth(cellModels[i], indexAtItems: i)
+            widthArray.addObject(spaceWidth)
             
             let sumArray = NSArray(array: widthArray)
             let sum:CGFloat = sumArray.valueForKeyPath("@sum.self") as! CGFloat
             
-            if sum <= contentViewWidth {
+            if sum <= limitWidth {
                 
                 cellCount++
             } else {
@@ -498,6 +569,17 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     }
     
     // MARK: - 业务
+    
+    /**
+     * 重新计算
+     */
+    private func caculate() {
+        
+        cellCountDictionary = caculateCellCountForEveryRowInSection()
+        defaultCellCountForSectionDictionary = caculateDefaultCellCountForSection()
+        isShowMoreBtnDictionary = caculateIsShowMoreBtn()
+        expandSectionArray = [CJCollectionViewHeaderModel:Bool]()
+    }
     
     /**
      * 计算每个分类每一行包含的cell数量字典
