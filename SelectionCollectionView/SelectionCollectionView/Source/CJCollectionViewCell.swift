@@ -9,6 +9,14 @@
 import UIKit
 
 /**
+ * collectionView cell button
+ */
+class CJCollectionViewCellButton: UIButton {
+    
+    var indexPath: NSIndexPath!
+}
+
+/**
  * collectionView cell
  */
 class CJCollectionViewCell: UICollectionViewCell {
@@ -49,7 +57,31 @@ class CJCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    private var button: UIButton!
+    /**
+     * indexPath 按钮位置
+     */
+    var indexPath: NSIndexPath! {
+        
+        willSet {
+            
+            button.indexPath = newValue
+        }
+    }
+    
+    /**
+     * 重写是否选中
+     */
+    override var selected : Bool {
+        
+        willSet {
+            
+            button.selected = newValue
+        }
+    }
+    
+    // MARK: - Private
+    
+    private var button: CJCollectionViewCellButton!
     
     // MARK: - Constants
     
@@ -83,14 +115,16 @@ class CJCollectionViewCell: UICollectionViewCell {
     private func setup() {
         
         setupButton()
+        
     }
     
     private func setupButton() {
         
         // create
-        button = UIButton()
+        button = CJCollectionViewCellButton()
         button.generalStyle()
         button.homeStyle()
+        button.userInteractionEnabled = false
         
         // add
         contentView.addSubview(button)

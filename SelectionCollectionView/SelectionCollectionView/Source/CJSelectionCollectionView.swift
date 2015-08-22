@@ -8,6 +8,13 @@
 
 import UIKit
 
+enum CJSelectionCollectionViewType {
+    
+    case MultipleChoice // 多选
+    case SingleChoice   // 单选
+    case SingleClick    // 单击
+}
+
 class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelegate,CJCollectionViewHeaderDelegate {
     
     /**
@@ -109,6 +116,38 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         }
     }
     
+    /**
+     * 类型
+     */
+    var type : CJSelectionCollectionViewType = .SingleClick {
+        
+        willSet {
+            
+            switch (newValue) {
+            case .SingleClick:
+                
+                collectionView.allowsSelection = false
+                
+                break;
+            case .MultipleChoice:
+                
+                collectionView.allowsSelection = true
+                collectionView.allowsMultipleSelection = true
+                
+                break;
+            case .SingleChoice:
+                
+                collectionView.allowsSelection = true
+                collectionView.allowsMultipleSelection = false
+                
+                break;
+                
+            default:
+                break;
+            }
+        }
+    }
+    
     // MARK: - Private
     
     private var collectionView : UICollectionView!
@@ -185,6 +224,9 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         // 默认为黑色，这里设置为白色以便显示
         collectionView.backgroundColor = UIColor.whiteColor()
         
+        // 默认collectionView不可以选择
+        type = .SingleClick
+        
         // add collectionView
         self.addSubview(collectionView)
         
@@ -228,6 +270,13 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     private func dictionaryForRow(indexPath:NSIndexPath) -> CJCollectionViewCellModel {
         
         return arrayForSection(indexPath.section)[indexPath.row]
+    }
+    
+    // MARK: - UICollectionViewDelegate
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        
+        println(indexPath)
     }
     
     // MARK: - UICollectionViewDataSource
@@ -286,6 +335,9 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
             
             cell.icon = nil
         }
+        
+        // 设置cell的位置
+        cell.indexPath = indexPath
         
         return cell
     }

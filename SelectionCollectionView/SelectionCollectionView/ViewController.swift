@@ -35,6 +35,22 @@ class ViewController: UIViewController {
     private func setupSelectionCollectionView() {
         
         self.selectionCollectionView.dataSource = self.getDataSource()
+        self.selectionCollectionView.type = .MultipleChoice
+        
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(NSEC_PER_SEC * 5)), dispatch_get_main_queue()) { () -> Void in
+//            
+//            self.selectionCollectionView.type = .SingleChoice
+//        }
+//        
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(NSEC_PER_SEC * 10)), dispatch_get_main_queue()) { () -> Void in
+//            
+//            self.selectionCollectionView.type = .MultipleChoice
+//        }
+//        
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(NSEC_PER_SEC * 15)), dispatch_get_main_queue()) { () -> Void in
+//            
+//            self.selectionCollectionView.type = .SingleClick
+//        }
     }
     
     // MARK: -
