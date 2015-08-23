@@ -17,6 +17,9 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         
         didSet {
             
+            // 保存原始数据
+            originalDataSource = dataSource
+            
             // 根据分类类型是 多选 单选 单击，增加或删除 全部 选项
             
             let allChoiceModel = CJCollectionViewCellModel(icon: nil, title: kAllTitle ,selected: true)
@@ -232,6 +235,9 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         }
     }
     
+    // 原始数据 
+    private var originalDataSource = [CJCollectionViewHeaderModel: [CJCollectionViewCellModel]]()
+    
     
     // MARK: - Constants
     
@@ -262,6 +268,14 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         
         // 计算
         caculate()
+    }
+    
+    // MARK: - 重置
+    
+    func reset() {
+        
+        dataSource = originalDataSource
+        collectionView.reloadData()
     }
     
     // MARK: - setup
