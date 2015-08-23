@@ -64,98 +64,43 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
                     break;
                 }
             }
-            
-            collectionView.reloadData()
         }
     }
     
     /**
      * collection View 左边距
      */
-    var collectionViewLeftMargin : CGFloat = 16  {
-        
-        didSet {
-            
-            collectionView.reloadData()
-        }
-    }
+    var collectionViewLeftMargin : CGFloat = 16
     
     /**
      * collection View 右边距
      */
-    var collectionViewRightMargin : CGFloat = 16 {
-        
-        didSet {
-            
-            collectionView.reloadData()
-        }
-    }
+    var collectionViewRightMargin : CGFloat = 16
     
     /**
      * collection View 上边距
      */
-    var collectionViewTopMargin : CGFloat = 8 {
-        
-        didSet {
-            
-            collectionView.reloadData()
-        }
-    }
+    var collectionViewTopMargin : CGFloat = 8
     
     /**
      * collection View 下边距
      */
-    var collectionViewBottomMargin : CGFloat = 8 {
-        
-        didSet {
-            
-            collectionView.reloadData()
-        }
-    }
+    var collectionViewBottomMargin : CGFloat = 8
     
     /**
      * cell 之间的水平间距
      */
-    var cellHorizontalMargin : CGFloat = 12 {
-        
-        didSet {
-            
-            collectionView.reloadData()
-        }
-    }
+    var cellHorizontalMargin : CGFloat = 12
     
     /**
      * cell 可以改变cell中内容到左右边界的距离
      */
-    var cellHorizontalPadding : CGFloat = 20 {
-        
-        didSet {
-            
-            collectionView.reloadData()
-        }
-    }
+    var cellHorizontalPadding : CGFloat = 20
     
     /**
      * 默认显示行数
      */
-    var defaultRows:Int = 1 {
-        
-        didSet {
-            
-            collectionView.reloadData()
-        }
-    }
-    
-    /**
-     * 是否显示清空
-     */
-    var isShowClearButton = true {
-        
-        didSet {
-            
-            collectionView.reloadData()
-        }
-    }
+    var defaultRows:Int = 1
     
     /**
      * 点击单元格事件
@@ -267,11 +212,22 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         caculate()
     }
     
-    // MARK: - 重置
+    // MARK: - 公开方法
     
+    /**
+     * 重置
+     */
     func reset() {
         
         dataSource = originalDataSource
+        collectionView.reloadData()
+    }
+    
+    /**
+     * 刷新
+     */
+    func reloadData() {
+        
         collectionView.reloadData()
     }
     
@@ -594,7 +550,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         header.rightMargin = collectionViewRightMargin
         
         // 是否显示清空按钮
-        header.isShowClearButton = isShowClearButton
+        header.isShowClearButton  = key.isShowClearButton
         
         return header
     }

@@ -21,6 +21,7 @@ class CJCollectionViewHeaderModel: NSObject {
     var title   : String? // 标题
     var type    : CJCollectionViewHeaderModelType = .MultipleChoice // 该分类下按钮类型
     var isExpend : Bool = true  // 是否展开
+    var isShowClearButton: Bool = false // 是否现实清除按钮
     
     // MARK: -
     
@@ -45,6 +46,15 @@ class CJCollectionViewHeaderModel: NSObject {
         self.isExpend = isExpend
     }
     
+    init(icon: String?, title: String?, type: CJCollectionViewHeaderModelType,isExpend:Bool, isShowClearButton:Bool) {
+        
+        self.icon = icon
+        self.title = title
+        self.type = type
+        self.isExpend = isExpend
+        self.isShowClearButton = isShowClearButton
+    }
+    
     func copyWithZone(zone: NSZone) -> AnyObject {
         
         return CJCollectionViewHeaderModel(icon: icon, title: title)
@@ -56,6 +66,7 @@ class CJCollectionViewHeaderModel: NSObject {
         self.title        = decoder.decodeObjectForKey("title") as? String
         self.type         = CJCollectionViewHeaderModelType(rawValue:decoder.decodeObjectForKey("type") as! Int)!
         self.isExpend        = decoder.decodeObjectForKey("isExpend") as! Bool
+        self.isShowClearButton        = decoder.decodeObjectForKey("isShowClearButton") as! Bool
         
     }
     
@@ -65,6 +76,7 @@ class CJCollectionViewHeaderModel: NSObject {
         encoder.encodeObject(self.title,forKey: "title")
         encoder.encodeObject(self.type.rawValue, forKey: "type")
         encoder.encodeObject(self.isExpend,forKey: "isExpend")
+        encoder.encodeObject(self.isShowClearButton,forKey: "isShowClearButton")
     }
     
     // MARK: - 重写比较方法
