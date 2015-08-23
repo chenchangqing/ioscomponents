@@ -578,6 +578,9 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
                 
                 header.moreButtonSelected = false
             }
+        } else {
+            
+            header.moreButtonSelected = false
         }
         
         // delegate
