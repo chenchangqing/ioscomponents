@@ -20,8 +20,8 @@
 		E6EBD79D1B86E662008DC51D /* UIButton+CollectionCellStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = E6EBD79C1B86E662008DC51D /* UIButton+CollectionCellStyle.m */; };
 		E6EBD79F1B86FB53008DC51D /* CJSelectionCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EBD79E1B86FB53008DC51D /* CJSelectionCollectionView.swift */; };
 		E6EBD7A11B871070008DC51D /* data.json in Resources */ = {isa = PBXBuildFile; fileRef = E6EBD7A01B871070008DC51D /* data.json */; };
-		E6EBD7A31B8719FA008DC51D /* CJCollectionViewHeaderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EBD7A21B8719FA008DC51D /* CJCollectionViewHeaderModel.swift */; };
-		E6EBD7A51B871A15008DC51D /* CJCollectionViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EBD7A41B871A15008DC51D /* CJCollectionViewCellModel.swift */; };
+		E6FC020B1B89B37000869262 /* CJCollectionViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FC02091B89B37000869262 /* CJCollectionViewCellModel.swift */; };
+		E6FC020C1B89B37000869262 /* CJCollectionViewHeaderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FC020A1B89B37000869262 /* CJCollectionViewHeaderModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,8 +55,8 @@
 		E6EBD79C1B86E662008DC51D /* UIButton+CollectionCellStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+CollectionCellStyle.m"; sourceTree = "<group>"; };
 		E6EBD79E1B86FB53008DC51D /* CJSelectionCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CJSelectionCollectionView.swift; sourceTree = "<group>"; };
 		E6EBD7A01B871070008DC51D /* data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = data.json; sourceTree = "<group>"; };
-		E6EBD7A21B8719FA008DC51D /* CJCollectionViewHeaderModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CJCollectionViewHeaderModel.swift; sourceTree = "<group>"; };
-		E6EBD7A41B871A15008DC51D /* CJCollectionViewCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CJCollectionViewCellModel.swift; sourceTree = "<group>"; };
+		E6FC02091B89B37000869262 /* CJCollectionViewCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CJCollectionViewCellModel.swift; path = Model/CJCollectionViewCellModel.swift; sourceTree = "<group>"; };
+		E6FC020A1B89B37000869262 /* CJCollectionViewHeaderModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CJCollectionViewHeaderModel.swift; path = Model/CJCollectionViewHeaderModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,8 +171,8 @@
 		E6EBD7A61B87217F008DC51D /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				E6EBD7A21B8719FA008DC51D /* CJCollectionViewHeaderModel.swift */,
-				E6EBD7A41B871A15008DC51D /* CJCollectionViewCellModel.swift */,
+				E6FC02091B89B37000869262 /* CJCollectionViewCellModel.swift */,
+				E6FC020A1B89B37000869262 /* CJCollectionViewHeaderModel.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -281,12 +281,12 @@
 			files = (
 				E6EBD76F1B86E3FD008DC51D /* ViewController.swift in Sources */,
 				E6EBD7931B86E591008DC51D /* CJCollectionViewCell.swift in Sources */,
+				E6FC020C1B89B37000869262 /* CJCollectionViewHeaderModel.swift in Sources */,
 				E6EBD7911B86E4A7008DC51D /* UICollectionViewLeftAlignedLayout.m in Sources */,
-				E6EBD7A51B871A15008DC51D /* CJCollectionViewCellModel.swift in Sources */,
+				E6FC020B1B89B37000869262 /* CJCollectionViewCellModel.swift in Sources */,
 				E6EBD7951B86E5BE008DC51D /* CJCollectionViewHeader.swift in Sources */,
 				E6EBD76D1B86E3FD008DC51D /* AppDelegate.swift in Sources */,
 				E6EBD79D1B86E662008DC51D /* UIButton+CollectionCellStyle.m in Sources */,
-				E6EBD7A31B8719FA008DC51D /* CJCollectionViewHeaderModel.swift in Sources */,
 				E6EBD79F1B86FB53008DC51D /* CJSelectionCollectionView.swift in Sources */,
 				E67A9CB31B8838EB00C19527 /* CJCollectionViewEmptyCell.swift in Sources */,
 			);

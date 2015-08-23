@@ -223,9 +223,6 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     // 每个分类下是否应该显示更多按钮字典
     private var isShowMoreBtnDictionary :[CJCollectionViewHeaderModel:Bool]!
     
-    // 每个分类下是否已经被展开
-    private var expandSectionArray = [CJCollectionViewHeaderModel:Bool]()
-    
     // cell所能占据的最大宽度
     private var limitWidth: CGFloat! {
         
@@ -499,12 +496,9 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         // 指定分类下有数据时，如果更多按钮状态为选中则显示所有cell，反之只显示默认行数下的cell
         let key = keyForSection(section)
         
-        if let flag = expandSectionArray[key] {
+        if key.isExpend {
             
-            if flag {
-                
-                return arrayForSection(section).count
-            }
+            return arrayForSection(section).count
         }
         
         return defaultCellCountForSectionDictionary[key]!
@@ -584,14 +578,9 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         header.moreButtonHidden = !isShowMoreBtnDictionary[key]!
         
         // 设置更多按钮的状态
-        if let flag = expandSectionArray[key] {
-            if flag {
-                
-                header.moreButtonSelected = true
-            } else {
-                
-                header.moreButtonSelected = false
-            }
+        if key.isExpend {
+            
+            header.moreButtonSelected = true
         } else {
             
             header.moreButtonSelected = false
@@ -661,7 +650,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         sender.selected = !sender.selected
         
         let key = keyForSection(sender.tag)
-        expandSectionArray[key] = sender.selected
+        key.isExpend = sender.selected
         
         // 更新collectionView
         reloadSection(sender.tag)
@@ -843,7 +832,6 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         cellCountDictionary = caculateCellCountForEveryRowInSection()
         defaultCellCountForSectionDictionary = caculateDefaultCellCountForSection()
         isShowMoreBtnDictionary = caculateIsShowMoreBtn()
-        expandSectionArray = [CJCollectionViewHeaderModel:Bool]()
     }
     
     /**
