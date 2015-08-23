@@ -29,13 +29,7 @@ class CJCollectionViewHeaderModel: NSObject {
         self.title = title
     }
     
-    init(icon: String?, title: String?, selected: Bool) {
-        
-        self.icon = icon
-        self.title = title
-    }
-    
-    init(icon: String?, title: String?, selected: Bool, type: CJCollectionViewHeaderModelType) {
+    init(icon: String?, title: String?, type: CJCollectionViewHeaderModelType) {
         
         self.icon = icon
         self.title = title
@@ -85,5 +79,5 @@ class CJCollectionViewHeaderModel: NSObject {
             return "{header.title:\(title!)}"
         }
     }
-   
+    
 }
