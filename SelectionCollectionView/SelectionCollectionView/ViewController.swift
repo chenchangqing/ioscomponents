@@ -63,17 +63,17 @@ class ViewController: UIViewController {
     /**
      * 获得数据源
      */
-    private func getDataSource() -> [CJCollectionViewHeaderModel:[CJCollectionViewCellModel]] {
+    private func getDataSource() -> OrderedDictionary<CJCollectionViewHeaderModel,[CJCollectionViewCellModel]> {
         
         // 单例
         struct DataSourceSingleton{
             static var predicate:dispatch_once_t = 0
-            static var instance:[CJCollectionViewHeaderModel:[CJCollectionViewCellModel]]!
+            static var instance:OrderedDictionary<CJCollectionViewHeaderModel,[CJCollectionViewCellModel]>!
         }
         
         dispatch_once(&DataSourceSingleton.predicate, { () -> Void in
             
-            DataSourceSingleton.instance = [CJCollectionViewHeaderModel:[CJCollectionViewCellModel]]()
+            DataSourceSingleton.instance = OrderedDictionary<CJCollectionViewHeaderModel,[CJCollectionViewCellModel]>()
             
             let filePath = NSBundle.mainBundle().pathForResource("data", ofType: "json")!
             let data     = NSFileManager.defaultManager().contentsAtPath(filePath)

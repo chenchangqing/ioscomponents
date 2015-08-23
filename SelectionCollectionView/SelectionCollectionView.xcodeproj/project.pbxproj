@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E645653A1B89CA7300586896 /* OrderedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E64565391B89CA7300586896 /* OrderedDictionary.swift */; };
 		E67A9CB31B8838EB00C19527 /* CJCollectionViewEmptyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67A9CB21B8838EB00C19527 /* CJCollectionViewEmptyCell.swift */; };
 		E6EBD76D1B86E3FD008DC51D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EBD76C1B86E3FD008DC51D /* AppDelegate.swift */; };
 		E6EBD76F1B86E3FD008DC51D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EBD76E1B86E3FD008DC51D /* ViewController.swift */; };
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E64565391B89CA7300586896 /* OrderedDictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderedDictionary.swift; sourceTree = "<group>"; };
 		E67A9CB21B8838EB00C19527 /* CJCollectionViewEmptyCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CJCollectionViewEmptyCell.swift; sourceTree = "<group>"; };
 		E6EBD7671B86E3FD008DC51D /* SelectionCollectionView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SelectionCollectionView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6EBD76B1B86E3FD008DC51D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -77,6 +79,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E64565381B89CA7300586896 /* OrderedDictionary */ = {
+			isa = PBXGroup;
+			children = (
+				E64565391B89CA7300586896 /* OrderedDictionary.swift */,
+			);
+			path = OrderedDictionary;
+			sourceTree = "<group>";
+		};
 		E6EBD75E1B86E3FD008DC51D = {
 			isa = PBXGroup;
 			children = (
@@ -139,6 +149,7 @@
 		E6EBD78D1B86E4A7008DC51D /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				E64565381B89CA7300586896 /* OrderedDictionary */,
 				E6EBD7A61B87217F008DC51D /* Model */,
 				E6EBD79A1B86E652008DC51D /* Category */,
 				E6EBD78E1B86E4A7008DC51D /* UICollectionViewLeftAlignedLayout */,
@@ -288,6 +299,7 @@
 				E6EBD76D1B86E3FD008DC51D /* AppDelegate.swift in Sources */,
 				E6EBD79D1B86E662008DC51D /* UIButton+CollectionCellStyle.m in Sources */,
 				E6EBD79F1B86FB53008DC51D /* CJSelectionCollectionView.swift in Sources */,
+				E645653A1B89CA7300586896 /* OrderedDictionary.swift in Sources */,
 				E67A9CB31B8838EB00C19527 /* CJCollectionViewEmptyCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

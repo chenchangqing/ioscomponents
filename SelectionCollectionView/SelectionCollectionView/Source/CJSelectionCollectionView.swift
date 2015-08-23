@@ -13,7 +13,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     /**
      * 数据源
      */
-    var dataSource = [CJCollectionViewHeaderModel:[CJCollectionViewCellModel]]() {
+    var dataSource = OrderedDictionary<CJCollectionViewHeaderModel,[CJCollectionViewCellModel]>() {
         
         didSet {
             
@@ -110,11 +110,11 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     /**
      * 选中数组
      */
-    var resultArray : [CJCollectionViewHeaderModel:[CJCollectionViewCellModel]] {
+    var resultArray : OrderedDictionary<CJCollectionViewHeaderModel,[CJCollectionViewCellModel]> {
 
      get {
     
-        var resultArray = [CJCollectionViewHeaderModel:[CJCollectionViewCellModel]]()
+        var resultArray = OrderedDictionary<CJCollectionViewHeaderModel,[CJCollectionViewCellModel]>()
         
         let allChoiceModel = CJCollectionViewCellModel(icon: nil, title: kAllTitle)
         
@@ -178,7 +178,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     }
     
     // 原始数据 
-    private var originalDataSource = [CJCollectionViewHeaderModel: [CJCollectionViewCellModel]]()
+    private var originalDataSource = OrderedDictionary<CJCollectionViewHeaderModel,[CJCollectionViewCellModel]>()
     
     
     // MARK: - Constants
@@ -281,7 +281,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
      */
     private func keyForSection(section:Int) -> CJCollectionViewHeaderModel {
         
-        return dataSource.keys.array[section]
+        return dataSource.keys[section]
     }
     
     /**
@@ -799,7 +799,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         
         var resultDic = [CJCollectionViewHeaderModel:[Int]]()
         
-        for key in dataSource.keys.array {
+        for key in dataSource.keys {
             
             let tempArray = caculateCellCountForEveryRow(dataSource[key]!)
             resultDic[key] = tempArray
