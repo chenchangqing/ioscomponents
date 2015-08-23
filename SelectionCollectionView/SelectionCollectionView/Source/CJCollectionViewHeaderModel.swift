@@ -17,9 +17,9 @@ enum CJCollectionViewHeaderModelType : Int {
 
 class CJCollectionViewHeaderModel: NSObject {
     
-    var icon : String? // 图片
-    var title : String? // 标题
-    var type: CJCollectionViewHeaderModelType = .MultipleChoice // 该分类下按钮类型
+    var icon    : String? // 图片
+    var title   : String? // 标题
+    var type    : CJCollectionViewHeaderModelType = .MultipleChoice // 该分类下按钮类型
     
     // MARK: -
     
@@ -40,6 +40,11 @@ class CJCollectionViewHeaderModel: NSObject {
         self.icon = icon
         self.title = title
         self.type = type
+    }
+    
+    func copyWithZone(zone: NSZone) -> AnyObject {
+        
+        return CJCollectionViewHeaderModel(icon: icon, title: title)
     }
     
     required init(coder decoder: NSCoder) {
@@ -71,17 +76,14 @@ class CJCollectionViewHeaderModel: NSObject {
         return false
     }
     
+    // MARK: - 重写描述
+    
     override var description: String {
         
         get {
             
             return "{header.title:\(title!)}"
         }
-    }
-    
-    func copyWithZone(zone: NSZone) -> AnyObject {
-        
-        return CJCollectionViewHeaderModel(icon: icon, title: title)
     }
    
 }

@@ -10,9 +10,9 @@ import UIKit
 
 class CJCollectionViewCellModel: NSObject {
    
-    var icon : String? // 图片
-    var title : String? // 标题
-    var selected : Bool = false // 是否全选
+    var icon        : String?       // 图片
+    var title       : String?       // 标题
+    var selected    : Bool = false  // 是否选中
     
     // MARK: -
     
@@ -27,6 +27,11 @@ class CJCollectionViewCellModel: NSObject {
         self.icon = icon
         self.title = title
         self.selected = selected
+    }
+    
+    func copyWithZone(zone: NSZone) -> AnyObject {
+        
+        return CJCollectionViewCellModel(icon: icon, title: title)
     }
     
     required init(coder decoder: NSCoder) {
@@ -57,10 +62,7 @@ class CJCollectionViewCellModel: NSObject {
         return false
     }
     
-    func copyWithZone(zone: NSZone) -> AnyObject {
-        
-        return CJCollectionViewCellModel(icon: icon, title: title)
-    }
+    // MARK: - 重写描述
     
     override var description: String {
         

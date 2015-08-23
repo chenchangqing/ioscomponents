@@ -27,7 +27,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
                 case .MultipleChoice:
                     
                     let array = NSMutableArray(array: cellModels)
-                    if !array.containsObject(allChoiceModel) {
+                    if !array.containsObject(allChoiceModel) && array.count != 0 {
                         
                         cellModels.insert(allChoiceModel, atIndex: 0)
                         dataSource[headerModel] = cellModels
