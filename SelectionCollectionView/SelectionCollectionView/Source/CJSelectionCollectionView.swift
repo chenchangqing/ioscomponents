@@ -110,7 +110,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     /**
      * 选中数组
      */
-    var resultArray : OrderedDictionary<CJCollectionViewHeaderModel,[CJCollectionViewCellModel]> {
+    var resultDictionary : OrderedDictionary<CJCollectionViewHeaderModel,[CJCollectionViewCellModel]> {
 
      get {
     
