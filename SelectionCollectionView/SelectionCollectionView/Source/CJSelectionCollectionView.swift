@@ -608,7 +608,8 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     */
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         
-        return CGSizeMake(CGRectGetWidth(self.bounds) - 50, 38)
+        let key = keyForSection(section)
+        return CGSizeMake(CGRectGetWidth(self.bounds) - 50, key.height)
     }
     
     // MARK: - CJCollectionViewHeaderDelegate
@@ -669,17 +670,23 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         
         if let title = cellModel.title {
             
-            let size  = title.sizeWithAttributes([NSFontAttributeName:UIFont.systemFontOfSize(16)])
-            cellWidth = CGFloat(ceilf(Float(size.width))) + cellHorizontalPadding
-            
-            if let icon=cellModel.icon {
+            if cellModel.width != 0 {
                 
-                // 如果包含图片，增加item的宽度
-                cellWidth += cellHorizontalPadding
+                cellWidth = cellModel.width >= limitWidth ? limitWidth : cellModel.width
+            } else {
+                
+                let size  = title.sizeWithAttributes([NSFontAttributeName:UIFont.systemFontOfSize(16)])
+                cellWidth = CGFloat(ceilf(Float(size.width))) + cellHorizontalPadding
+                
+                if let icon=cellModel.icon {
+                    
+                    // 如果包含图片，增加item的宽度
+                    cellWidth += cellHorizontalPadding
+                }
+                
+                // 如果通过文字+图片计算出来的宽度大于等于限制宽度，则改变单元格item的实际宽度
+                cellWidth = cellWidth >= limitWidth ? limitWidth : cellWidth
             }
-            
-            // 如果通过文字+图片计算出来的宽度大于等于限制宽度，则改变单元格item的实际宽度
-            cellWidth = cellWidth >= limitWidth ? limitWidth : cellWidth
         }
         
         return cellWidth

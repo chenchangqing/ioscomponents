@@ -13,6 +13,7 @@ class CJCollectionViewCellModel: NSObject {
     var icon        : String?       // 图片
     var title       : String?       // 标题
     var selected    : Bool = false  // 是否选中
+    var width       : CGFloat = 0   // 指定cell的宽度
     
     // MARK: -
     
@@ -29,9 +30,17 @@ class CJCollectionViewCellModel: NSObject {
         self.selected = selected
     }
     
+    init(icon: String?, title: String?, selected: Bool, width: CGFloat) {
+        
+        self.icon = icon
+        self.title = title
+        self.selected = selected
+        self.width = width
+    }
+    
     func copyWithZone(zone: NSZone) -> AnyObject {
         
-        return CJCollectionViewCellModel(icon: icon, title: title, selected:selected)
+        return CJCollectionViewCellModel(icon: icon, title: title, selected:selected, width : width)
     }
     
     required init(coder decoder: NSCoder) {
@@ -39,6 +48,7 @@ class CJCollectionViewCellModel: NSObject {
         self.icon         = decoder.decodeObjectForKey("icon") as! String?
         self.title        = decoder.decodeObjectForKey("title") as! String?
         self.selected     = decoder.decodeObjectForKey("selected") as! Bool
+        self.width        = decoder.decodeObjectForKey("width") as! CGFloat
     }
     
     func encodeWithCoder(encoder: NSCoder) {
@@ -46,6 +56,7 @@ class CJCollectionViewCellModel: NSObject {
         encoder.encodeObject(self.icon,forKey: "icon")
         encoder.encodeObject(self.title,forKey: "title")
         encoder.encodeObject(self.selected, forKey: "selected")
+        encoder.encodeObject(self.width, forKey: "width")
     }
     
     // MARK: - 重写比较方法

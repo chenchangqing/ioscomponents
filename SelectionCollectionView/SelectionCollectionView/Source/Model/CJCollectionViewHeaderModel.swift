@@ -22,6 +22,7 @@ class CJCollectionViewHeaderModel: NSObject,NSCopying {
     var type    : CJCollectionViewHeaderModelType = .MultipleChoice // 该分类下按钮类型
     var isExpend : Bool = true  // 是否展开
     var isShowClearButton: Bool = false // 是否现实清除按钮
+    var height : CGFloat = 50 // header高度
     
     // MARK: -
     
@@ -55,9 +56,19 @@ class CJCollectionViewHeaderModel: NSObject,NSCopying {
         self.isShowClearButton = isShowClearButton
     }
     
+    init(icon: String?, title: String?, type: CJCollectionViewHeaderModelType,isExpend:Bool, isShowClearButton:Bool, height: CGFloat) {
+        
+        self.icon = icon
+        self.title = title
+        self.type = type
+        self.isExpend = isExpend
+        self.isShowClearButton = isShowClearButton
+        self.height = height
+    }
+    
     func copyWithZone(zone: NSZone) -> AnyObject {
         
-        return CJCollectionViewHeaderModel(icon: icon, title: title ,type: type, isExpend: isExpend, isShowClearButton: isShowClearButton)
+        return CJCollectionViewHeaderModel(icon: icon, title: title ,type: type, isExpend: isExpend, isShowClearButton: isShowClearButton, height :height)
     }
     
     required init(coder decoder: NSCoder) {
@@ -67,6 +78,7 @@ class CJCollectionViewHeaderModel: NSObject,NSCopying {
         self.type         = CJCollectionViewHeaderModelType(rawValue:decoder.decodeObjectForKey("type") as! Int)!
         self.isExpend        = decoder.decodeObjectForKey("isExpend") as! Bool
         self.isShowClearButton        = decoder.decodeObjectForKey("isShowClearButton") as! Bool
+        self.height       = decoder.decodeObjectForKey("height") as! CGFloat
         
     }
     
@@ -77,6 +89,7 @@ class CJCollectionViewHeaderModel: NSObject,NSCopying {
         encoder.encodeObject(self.type.rawValue, forKey: "type")
         encoder.encodeObject(self.isExpend,forKey: "isExpend")
         encoder.encodeObject(self.isShowClearButton,forKey: "isShowClearButton")
+        encoder.encodeObject(self.height,forKey: "height")
     }
     
     // MARK: - 重写比较方法
