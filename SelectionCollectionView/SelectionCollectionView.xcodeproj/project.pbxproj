@@ -20,7 +20,8 @@
 		E6EBD7951B86E5BE008DC51D /* CJCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EBD7941B86E5BE008DC51D /* CJCollectionViewHeader.swift */; };
 		E6EBD79D1B86E662008DC51D /* UIButton+CollectionCellStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = E6EBD79C1B86E662008DC51D /* UIButton+CollectionCellStyle.m */; };
 		E6EBD79F1B86FB53008DC51D /* CJSelectionCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EBD79E1B86FB53008DC51D /* CJSelectionCollectionView.swift */; };
-		E6EBD7A11B871070008DC51D /* data.json in Resources */ = {isa = PBXBuildFile; fileRef = E6EBD7A01B871070008DC51D /* data.json */; };
+		E6EBD7A11B871070008DC51D /* filter.json in Resources */ = {isa = PBXBuildFile; fileRef = E6EBD7A01B871070008DC51D /* filter.json */; };
+		E6F44F901B8AF76A00686400 /* DataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F44F8F1B8AF76A00686400 /* DataHelper.swift */; };
 		E6FC020B1B89B37000869262 /* CJCollectionViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FC02091B89B37000869262 /* CJCollectionViewCellModel.swift */; };
 		E6FC020C1B89B37000869262 /* CJCollectionViewHeaderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FC020A1B89B37000869262 /* CJCollectionViewHeaderModel.swift */; };
 /* End PBXBuildFile section */
@@ -56,7 +57,8 @@
 		E6EBD79B1B86E662008DC51D /* UIButton+CollectionCellStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+CollectionCellStyle.h"; sourceTree = "<group>"; };
 		E6EBD79C1B86E662008DC51D /* UIButton+CollectionCellStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+CollectionCellStyle.m"; sourceTree = "<group>"; };
 		E6EBD79E1B86FB53008DC51D /* CJSelectionCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CJSelectionCollectionView.swift; sourceTree = "<group>"; };
-		E6EBD7A01B871070008DC51D /* data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = data.json; sourceTree = "<group>"; };
+		E6EBD7A01B871070008DC51D /* filter.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = filter.json; sourceTree = "<group>"; };
+		E6F44F8F1B8AF76A00686400 /* DataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataHelper.swift; sourceTree = "<group>"; };
 		E6FC02091B89B37000869262 /* CJCollectionViewCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CJCollectionViewCellModel.swift; path = Model/CJCollectionViewCellModel.swift; sourceTree = "<group>"; };
 		E6FC020A1B89B37000869262 /* CJCollectionViewHeaderModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CJCollectionViewHeaderModel.swift; path = Model/CJCollectionViewHeaderModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -116,6 +118,7 @@
 				E6EBD7731B86E3FD008DC51D /* Images.xcassets */,
 				E6EBD7751B86E3FD008DC51D /* LaunchScreen.xib */,
 				E6EBD76A1B86E3FD008DC51D /* Supporting Files */,
+				E6F44F8F1B8AF76A00686400 /* DataHelper.swift */,
 			);
 			path = SelectionCollectionView;
 			sourceTree = "<group>";
@@ -123,7 +126,7 @@
 		E6EBD76A1B86E3FD008DC51D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				E6EBD7A01B871070008DC51D /* data.json */,
+				E6EBD7A01B871070008DC51D /* filter.json */,
 				E6EBD76B1B86E3FD008DC51D /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -272,7 +275,7 @@
 				E6EBD7721B86E3FD008DC51D /* Main.storyboard in Resources */,
 				E6EBD7771B86E3FD008DC51D /* LaunchScreen.xib in Resources */,
 				E6EBD7741B86E3FD008DC51D /* Images.xcassets in Resources */,
-				E6EBD7A11B871070008DC51D /* data.json in Resources */,
+				E6EBD7A11B871070008DC51D /* filter.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,6 +302,7 @@
 				E6EBD76D1B86E3FD008DC51D /* AppDelegate.swift in Sources */,
 				E6EBD79D1B86E662008DC51D /* UIButton+CollectionCellStyle.m in Sources */,
 				E6EBD79F1B86FB53008DC51D /* CJSelectionCollectionView.swift in Sources */,
+				E6F44F901B8AF76A00686400 /* DataHelper.swift in Sources */,
 				E645653A1B89CA7300586896 /* OrderedDictionary.swift in Sources */,
 				E67A9CB31B8838EB00C19527 /* CJCollectionViewEmptyCell.swift in Sources */,
 			);

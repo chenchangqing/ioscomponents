@@ -8,18 +8,46 @@
 
 import UIKit
 
-enum CJCollectionViewHeaderModelType : Int {
+enum CJCollectionViewHeaderModelTypeEnum : String {
     
-    case MultipleChoice = 0 // 多选
-    case SingleChoice   = 1 // 单选
-    case SingleClick    = 2 // 单击
+    case MultipleChoice = "多选"
+    case SingleChoice   = "单选"
+    case SingleClick    = "单击"
+    
+    static let allValues = [MultipleChoice,SingleChoice,SingleClick]
+    
+    // 位置
+    var index : Int {
+        
+        get {
+            
+            for var i = 0; i < CJCollectionViewHeaderModelTypeEnum.allValues.count; i++ {
+                
+                if self == CJCollectionViewHeaderModelTypeEnum.allValues[i] {
+                    
+                    return i
+                }
+            }
+            return -1
+        }
+    }
+    
+    // 查询指定位置的元素
+    static func instance(index:Int) -> CJCollectionViewHeaderModelTypeEnum? {
+        
+        if index >= 0 && index < CJCollectionViewHeaderModelTypeEnum.allValues.count {
+            
+            return CJCollectionViewHeaderModelTypeEnum.allValues[index]
+        }
+        return nil
+    }
 }
 
 class CJCollectionViewHeaderModel: NSObject,NSCopying {
     
     var icon    : String? // 图片
     var title   : String? // 标题
-    var type    : CJCollectionViewHeaderModelType = .MultipleChoice // 该分类下按钮类型
+    var type    : CJCollectionViewHeaderModelTypeEnum = .MultipleChoice // 该分类下按钮类型
     var isExpend : Bool = true  // 是否展开
     var isShowClearButton: Bool = false // 是否现实清除按钮
     var height : CGFloat = 50 // header高度
@@ -32,14 +60,14 @@ class CJCollectionViewHeaderModel: NSObject,NSCopying {
         self.title = title
     }
     
-    init(icon: String?, title: String?, type: CJCollectionViewHeaderModelType) {
+    init(icon: String?, title: String?, type: CJCollectionViewHeaderModelTypeEnum) {
         
         self.icon = icon
         self.title = title
         self.type = type
     }
     
-    init(icon: String?, title: String?, type: CJCollectionViewHeaderModelType,isExpend:Bool) {
+    init(icon: String?, title: String?, type: CJCollectionViewHeaderModelTypeEnum,isExpend:Bool) {
         
         self.icon = icon
         self.title = title
@@ -47,7 +75,7 @@ class CJCollectionViewHeaderModel: NSObject,NSCopying {
         self.isExpend = isExpend
     }
     
-    init(icon: String?, title: String?, type: CJCollectionViewHeaderModelType,isExpend:Bool, isShowClearButton:Bool) {
+    init(icon: String?, title: String?, type: CJCollectionViewHeaderModelTypeEnum,isExpend:Bool, isShowClearButton:Bool) {
         
         self.icon = icon
         self.title = title
@@ -56,7 +84,7 @@ class CJCollectionViewHeaderModel: NSObject,NSCopying {
         self.isShowClearButton = isShowClearButton
     }
     
-    init(icon: String?, title: String?, type: CJCollectionViewHeaderModelType,isExpend:Bool, isShowClearButton:Bool, height: CGFloat) {
+    init(icon: String?, title: String?, type: CJCollectionViewHeaderModelTypeEnum,isExpend:Bool, isShowClearButton:Bool, height: CGFloat) {
         
         self.icon = icon
         self.title = title
@@ -75,7 +103,7 @@ class CJCollectionViewHeaderModel: NSObject,NSCopying {
         
         self.icon         = decoder.decodeObjectForKey("icon") as? String
         self.title        = decoder.decodeObjectForKey("title") as? String
-        self.type         = CJCollectionViewHeaderModelType(rawValue:decoder.decodeObjectForKey("type") as! Int)!
+        self.type         = CJCollectionViewHeaderModelTypeEnum(rawValue:decoder.decodeObjectForKey("type") as! String)!
         self.isExpend        = decoder.decodeObjectForKey("isExpend") as! Bool
         self.isShowClearButton        = decoder.decodeObjectForKey("isShowClearButton") as! Bool
         self.height       = decoder.decodeObjectForKey("height") as! CGFloat

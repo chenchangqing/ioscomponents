@@ -32,14 +32,37 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
                 originalDataSource[headerModelCopy] = cellModelsCopy
             }
             
-            // 根据分类类型是 多选 单选 单击，增加或删除 全部 选项
+            // 判断是否有选中的cell
+            let querySelectedCellModel:(cellModels:[CJCollectionViewCellModel]) -> CJCollectionViewCellModel? = {
+                cellModels in
+                
+                for cellModel in cellModels {
+                    
+                    if cellModel.selected {
+                        
+                        return cellModel
+                    }
+                }
+                
+                return nil
+            }
             
-            let allChoiceModel = CJCollectionViewCellModel(icon: nil, title: kAllTitle ,selected: true)
+            // 根据分类类型是 多选 单选 单击，增加或删除 全部 选项
             
             for (headerModel,var cellModels) in dataSource {
                 
                 switch (headerModel.type) {
                 case .MultipleChoice:
+                    
+                    let allChoiceModel = CJCollectionViewCellModel(icon: nil, title: kAllTitle)
+                    
+                    if let cellModel=querySelectedCellModel(cellModels: cellModels) {
+                        
+                        allChoiceModel.selected = false
+                    } else {
+                        
+                        allChoiceModel.selected = true
+                    }
                     
                     let array = NSMutableArray(array: cellModels)
                     if !array.containsObject(allChoiceModel) && array.count != 0 {
@@ -51,6 +74,19 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
                     break;
                 case .SingleChoice:
                     
+                    let allChoiceModel = CJCollectionViewCellModel(icon: nil, title: kAllTitle)
+                    
+                    if let cellModel=querySelectedCellModel(cellModels: cellModels) {
+                    
+                        for temp in cellModels {
+                            
+                            if temp != cellModel {
+                                
+                                temp.selected = false
+                            }
+                        }
+                    }
+                    
                     let array = NSMutableArray(array: cellModels)
                     if array.containsObject(allChoiceModel) {
                         
@@ -61,6 +97,13 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
                     
                     break;
                 case .SingleClick:
+                    
+                    let allChoiceModel = CJCollectionViewCellModel(icon: nil, title: kAllTitle)
+                    
+                    for temp in cellModels {
+                        
+                        temp.selected = false
+                    }
                     
                     let array = NSMutableArray(array: cellModels)
                     if array.containsObject(allChoiceModel) {
