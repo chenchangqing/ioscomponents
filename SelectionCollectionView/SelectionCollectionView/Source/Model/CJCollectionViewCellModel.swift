@@ -91,7 +91,7 @@ class CJCollectionViewCellModel: NSObject {
         
         get {
             
-            return "{cell.title:\(title!)}"
+            return "{cell.title:\(title)}"
         }
     }
 }

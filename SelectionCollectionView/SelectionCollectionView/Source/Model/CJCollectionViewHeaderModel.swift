@@ -152,7 +152,7 @@ class CJCollectionViewHeaderModel: NSObject,NSCopying {
         
         get {
             
-            return "{header.title:\(title!)}"
+            return "{header.title:\(title)}"
         }
     }
     
