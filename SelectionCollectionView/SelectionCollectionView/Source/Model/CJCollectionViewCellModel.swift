@@ -31,7 +31,7 @@ class CJCollectionViewCellModel: NSObject {
     
     func copyWithZone(zone: NSZone) -> AnyObject {
         
-        return CJCollectionViewCellModel(icon: icon, title: title)
+        return CJCollectionViewCellModel(icon: icon, title: title, selected:selected)
     }
     
     required init(coder decoder: NSCoder) {

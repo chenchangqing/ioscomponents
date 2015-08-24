@@ -32,7 +32,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
                     let array = NSMutableArray(array: cellModels)
                     if !array.containsObject(allChoiceModel) && array.count != 0 {
                         
-                        cellModels.insert(allChoiceModel, atIndex: 0)
+                        cellModels.insert(allChoiceModel.copy() as! CJCollectionViewCellModel, atIndex: 0)
                         dataSource[headerModel] = cellModels
                     }
                     
