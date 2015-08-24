@@ -62,6 +62,18 @@ class CJCollectionViewCellModel: NSObject {
         return false
     }
     
+    override var hash: Int {
+        
+        get {
+            
+            let icon = self.icon == nil ? "" : self.icon!
+            let title = self.title == nil ? "" : self.title!
+            let iconTitle = icon + title
+            
+            return iconTitle.hash
+        }
+    }
+    
     // MARK: - 重写描述
     
     override var description: String {

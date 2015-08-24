@@ -15,7 +15,7 @@ enum CJCollectionViewHeaderModelType : Int {
     case SingleClick    = 2 // 单击
 }
 
-class CJCollectionViewHeaderModel: NSObject {
+class CJCollectionViewHeaderModel: NSObject,NSCopying {
     
     var icon    : String? // 图片
     var title   : String? // 标题
@@ -91,6 +91,18 @@ class CJCollectionViewHeaderModel: NSObject {
             }
         }
         return false
+    }
+    
+    override var hash: Int {
+        
+        get {
+            
+            let icon = self.icon == nil ? "" : self.icon!
+            let title = self.title == nil ? "" : self.title!
+            let iconTitle = icon + title
+            
+            return iconTitle.hash
+        }
     }
     
     // MARK: - 重写描述

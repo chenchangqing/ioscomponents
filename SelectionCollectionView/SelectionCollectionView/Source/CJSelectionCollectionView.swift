@@ -17,9 +17,6 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         
         didSet {
             
-            // 计算
-            caculate()
-            
             // 保存原始数据
             originalDataSource = OrderedDictionary<CJCollectionViewHeaderModel,[CJCollectionViewCellModel]>()
             for (headerModel,cellModels) in dataSource {
@@ -546,6 +543,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         // 是否显示更多
         let key = keyForSection(indexPath.section)
         
+        println(isShowMoreBtnDictionary)
         header.moreButtonHidden = !isShowMoreBtnDictionary[key]!
         
         // 设置更多按钮的状态
