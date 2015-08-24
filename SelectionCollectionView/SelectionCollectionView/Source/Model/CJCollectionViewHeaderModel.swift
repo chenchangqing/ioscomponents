@@ -57,7 +57,7 @@ class CJCollectionViewHeaderModel: NSObject {
     
     func copyWithZone(zone: NSZone) -> AnyObject {
         
-        return CJCollectionViewHeaderModel(icon: icon, title: title)
+        return CJCollectionViewHeaderModel(icon: icon, title: title ,type: type, isExpend: isExpend, isShowClearButton: isShowClearButton)
     }
     
     required init(coder decoder: NSCoder) {

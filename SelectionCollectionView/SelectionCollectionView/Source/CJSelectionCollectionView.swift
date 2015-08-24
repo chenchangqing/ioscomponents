@@ -11,14 +11,29 @@ import UIKit
 class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelegate,CJCollectionViewHeaderDelegate,CJCollectionViewCellDelegate {
     
     /**
-     * 数据源
-     */
+    * 数据源
+    */
     var dataSource = OrderedDictionary<CJCollectionViewHeaderModel,[CJCollectionViewCellModel]>() {
         
         didSet {
             
+            // 计算
+            caculate()
+            
             // 保存原始数据
-            originalDataSource = dataSource
+            originalDataSource = OrderedDictionary<CJCollectionViewHeaderModel,[CJCollectionViewCellModel]>()
+            for (headerModel,cellModels) in dataSource {
+                
+                let headerModelCopy = headerModel.copy() as! CJCollectionViewHeaderModel
+                var cellModelsCopy = [CJCollectionViewCellModel]()
+                
+                for cellModel in cellModels {
+                    
+                    cellModelsCopy.append(cellModel.copy() as! CJCollectionViewCellModel)
+                }
+                
+                originalDataSource[headerModelCopy] = cellModelsCopy
+            }
             
             // 根据分类类型是 多选 单选 单击，增加或删除 全部 选项
             
@@ -59,7 +74,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
                     }
                     
                     break;
-
+                    
                 default:
                     break;
                 }
@@ -68,91 +83,91 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     }
     
     /**
-     * collection View 左边距
-     */
+    * collection View 左边距
+    */
     var collectionViewLeftMargin : CGFloat = 16
     
     /**
-     * collection View 右边距
-     */
+    * collection View 右边距
+    */
     var collectionViewRightMargin : CGFloat = 16
     
     /**
-     * collection View 上边距
-     */
+    * collection View 上边距
+    */
     var collectionViewTopMargin : CGFloat = 8
     
     /**
-     * collection View 下边距
-     */
+    * collection View 下边距
+    */
     var collectionViewBottomMargin : CGFloat = 8
     
     /**
-     * cell 之间的水平间距
-     */
+    * cell 之间的水平间距
+    */
     var cellHorizontalMargin : CGFloat = 12
     
     /**
-     * cell 可以改变cell中内容到左右边界的距离
-     */
+    * cell 可以改变cell中内容到左右边界的距离
+    */
     var cellHorizontalPadding : CGFloat = 20
     
     /**
-     * 默认显示行数
-     */
+    * 默认显示行数
+    */
     var defaultRows:Int = 1
     
     /**
-     * 点击单元格事件
-     */
+    * 点击单元格事件
+    */
     var cellClicked : (cellModel:CJCollectionViewCellModel) -> Void = { celModel in }
     
     /**
-     * 选中数组
-     */
+    * 选中数组
+    */
     var resultDictionary : OrderedDictionary<CJCollectionViewHeaderModel,[CJCollectionViewCellModel]> {
-
-     get {
-    
-        var resultArray = OrderedDictionary<CJCollectionViewHeaderModel,[CJCollectionViewCellModel]>()
         
-        let allChoiceModel = CJCollectionViewCellModel(icon: nil, title: kAllTitle)
-        
-        for (headerModel,cellModels) in dataSource {
+        get {
             
-            if headerModel.type != .SingleClick {
+            var resultArray = OrderedDictionary<CJCollectionViewHeaderModel,[CJCollectionViewCellModel]>()
+            
+            let allChoiceModel = CJCollectionViewCellModel(icon: nil, title: kAllTitle)
+            
+            for (headerModel,cellModels) in dataSource {
                 
-                var tempCellModels = [CJCollectionViewCellModel]()
-                
-                for tempCellModel in cellModels {
+                if headerModel.type != .SingleClick {
                     
-                    if tempCellModel.isEqual(allChoiceModel) {
+                    var tempCellModels = [CJCollectionViewCellModel]()
+                    
+                    for tempCellModel in cellModels {
                         
-                        if tempCellModel.selected {
+                        if tempCellModel.isEqual(allChoiceModel) {
                             
-                            let array = NSMutableArray(array: cellModels)
-                            let index = array.indexOfObject(allChoiceModel)
-                            tempCellModels = cellModels
-                            tempCellModels.removeAtIndex(index)
+                            if tempCellModel.selected {
+                                
+                                let array = NSMutableArray(array: cellModels)
+                                let index = array.indexOfObject(allChoiceModel)
+                                tempCellModels = cellModels
+                                tempCellModels.removeAtIndex(index)
+                                
+                                break
+                            }
+                        } else {
                             
-                            break
-                        }
-                    } else {
-                        
-                        
-                        if tempCellModel.selected {
                             
-                            tempCellModels.append(tempCellModel)
+                            if tempCellModel.selected {
+                                
+                                tempCellModels.append(tempCellModel)
+                            }
                         }
                     }
+                    
+                    resultArray[headerModel] = tempCellModels
                 }
-                
-                resultArray[headerModel] = tempCellModels
             }
+            
+            return resultArray
         }
-        
-        return resultArray
-     }
     }
     
     // MARK: - Private
@@ -177,7 +192,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         }
     }
     
-    // 原始数据 
+    // 原始数据
     private var originalDataSource = OrderedDictionary<CJCollectionViewHeaderModel,[CJCollectionViewCellModel]>()
     
     
@@ -215,8 +230,8 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     // MARK: - 公开方法
     
     /**
-     * 重置
-     */
+    * 重置
+    */
     func reset() {
         
         dataSource = originalDataSource
@@ -224,8 +239,8 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     }
     
     /**
-     * 刷新
-     */
+    * 刷新
+    */
     func reloadData() {
         
         collectionView.reloadData()
@@ -240,8 +255,8 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     }
     
     /**
-     * 初始化 collectionView
-     */
+    * 初始化 collectionView
+    */
     private func setupCollectionView() {
         
         // create
@@ -277,24 +292,24 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     // MARK: -  处理数据
     
     /**
-     * 返回指定节的key
-     */
+    * 返回指定节的key
+    */
     private func keyForSection(section:Int) -> CJCollectionViewHeaderModel {
         
         return dataSource.keys[section]
     }
     
     /**
-     * 返回指定节的数据数组
-     */
+    * 返回指定节的数据数组
+    */
     private func arrayForSection(section:Int) -> [CJCollectionViewCellModel] {
         
         return dataSource[keyForSection(section)]!
     }
     
     /**
-     * 返回指定cell的数据字典
-     */
+    * 返回指定cell的数据字典
+    */
     private func dictionaryForRow(indexPath:NSIndexPath) -> CJCollectionViewCellModel {
         
         return arrayForSection(indexPath.section)[indexPath.row]
@@ -439,8 +454,8 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     // MARK: - UICollectionViewDataSource
     
     /**
-     * cells count
-     */
+    * cells count
+    */
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         // 指定分类下没有数据时，设置一个空，此时返回1
@@ -461,8 +476,8 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     }
     
     /**
-     * cell
-     */
+    * cell
+    */
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
         // 指定分类下没有数据时，现实空cell
@@ -558,8 +573,8 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     // MARK: - UICollectionViewDelegateFlowLayout
     
     /**
-     * cell size
-     */
+    * cell size
+    */
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         
         // 指定分类下没有数据时，设置cell width
@@ -576,24 +591,24 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     }
     
     /**
-     * collectionview edge
-     */
+    * collectionview edge
+    */
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
         
         return UIEdgeInsetsMake(collectionViewTopMargin, collectionViewLeftMargin, collectionViewBottomMargin, collectionViewRightMargin)
     }
     
     /**
-     * cell 左右之间的最小间距
-     */
+    * cell 左右之间的最小间距
+    */
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
         
         return cellHorizontalMargin
     }
     
     /**
-     * header size
-     */
+    * header size
+    */
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         
         return CGSizeMake(CGRectGetWidth(self.bounds) - 50, 38)
@@ -626,17 +641,17 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     }
     
     /**
-     * 更新指定分类数据
-     * 
-     * @param section 分类位置
-     */
+    * 更新指定分类数据
+    *
+    * @param section 分类位置
+    */
     private func reloadSection(section:Int) {
         
         collectionView.performBatchUpdates({ () -> Void in
             
             let section = NSIndexSet(index: section)
             self.collectionView.reloadSections(section)
-        }, completion: { (finished) -> Void in
+            }, completion: { (finished) -> Void in
                 
         })
         
@@ -645,12 +660,12 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     // MARK: - caculate
     
     /**
-     * 计算cell的width
-     *
-     * @param cell单元格数据
-     *
-     * @return cell的宽度
-     */
+    * 计算cell的width
+    *
+    * @param cell单元格数据
+    *
+    * @return cell的宽度
+    */
     private func caculateCellWidth(cellModel:CJCollectionViewCellModel) -> CGFloat {
         
         var cellWidth:CGFloat = 0
@@ -674,13 +689,13 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     }
     
     /**
-     * 计算cell所占据的最大宽度
-     *
-     * @param cell单元格数据
-     * @index cell位置
-     *
-     * @return cell所占据的最大宽度
-     */
+    * 计算cell所占据的最大宽度
+    *
+    * @param cell单元格数据
+    * @index cell位置
+    *
+    * @return cell所占据的最大宽度
+    */
     private func caculateCellSpaceWidth (cellModel:CJCollectionViewCellModel,indexAtItems index:Int) -> CGFloat {
         
         // 计算单元格cell的实际宽度
@@ -718,12 +733,12 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     }
     
     /**
-     * 计算第一行包含的cell数量
-     *
-     * @param cellModels 单元格数据数组
-     *
-     * @return 第一行包含的cell数量
-     */
+    * 计算第一行包含的cell数量
+    *
+    * @param cellModels 单元格数据数组
+    *
+    * @return 第一行包含的cell数量
+    */
     private func caculateCellCountForFirstRow(cellModels:[CJCollectionViewCellModel]) -> Int {
         
         var cellCount: Int   = 0
@@ -750,11 +765,11 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     }
     
     /**
-     * 计算每一行包含的cell数量数组
-     * @param cellModels 单元格数据数组
-     *
-     * @return 每一行包含的cell数量数组
-     */
+    * 计算每一行包含的cell数量数组
+    * @param cellModels 单元格数据数组
+    *
+    * @return 每一行包含的cell数量数组
+    */
     private func caculateCellCountForEveryRow(var cellModels:[CJCollectionViewCellModel]) -> [Int] {
         
         var resultArray = [Int]()
@@ -781,8 +796,8 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     // MARK: - 业务
     
     /**
-     * 重新计算
-     */
+    * 重新计算
+    */
     private func caculate() {
         
         cellCountDictionary = caculateCellCountForEveryRowInSection()
@@ -791,10 +806,10 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     }
     
     /**
-     * 计算每个分类每一行包含的cell数量字典
-     *
-     * @return 每个分类每一行包含的cell数量字典
-     */
+    * 计算每个分类每一行包含的cell数量字典
+    *
+    * @return 每个分类每一行包含的cell数量字典
+    */
     private func caculateCellCountForEveryRowInSection() -> [CJCollectionViewHeaderModel:[Int]] {
         
         var resultDic = [CJCollectionViewHeaderModel:[Int]]()
@@ -808,10 +823,10 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     }
     
     /**
-     * 计算每个分类下默认显示的行数包含cell的数量字典
-     * 
-     * @return 每个分类下默认显示的行数包含cell的数量字典
-     */
+    * 计算每个分类下默认显示的行数包含cell的数量字典
+    *
+    * @return 每个分类下默认显示的行数包含cell的数量字典
+    */
     private func caculateDefaultCellCountForSection() -> [CJCollectionViewHeaderModel:Int] {
         
         var resultDic = [CJCollectionViewHeaderModel:Int]()
@@ -838,10 +853,10 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     }
     
     /**
-     * 计算每个分类下是否应该显示更多按钮字典
-     * 
-     * @return 每个分类下是否应该显示更多按钮字典
-     */
+    * 计算每个分类下是否应该显示更多按钮字典
+    *
+    * @return 每个分类下是否应该显示更多按钮字典
+    */
     private func caculateIsShowMoreBtn() -> [CJCollectionViewHeaderModel: Bool] {
         
         var resultDic = [CJCollectionViewHeaderModel: Bool]()
@@ -861,5 +876,5 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         
         return resultDic
     }
-
+    
 }
