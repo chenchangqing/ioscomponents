@@ -17,6 +17,9 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         
         didSet {
             
+            // fix isShowMoreBtnDictionary is nil bug
+            caculate()
+            
             // 保存原始数据
             originalDataSource = OrderedDictionary<CJCollectionViewHeaderModel,[CJCollectionViewCellModel]>()
             for (headerModel,cellModels) in dataSource {
