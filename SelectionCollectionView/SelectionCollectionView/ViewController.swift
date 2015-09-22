@@ -35,9 +35,9 @@ class ViewController: UIViewController {
     private func setupSelectionCollectionView() {
         
         self.selectionCollectionView.dataSource = DataHelper.dataSource("filter")
-        selectionCollectionView.cellClicked = {cellModel in
+        selectionCollectionView.cellClicked = {(headerModel,cellModel) in
         
-            println(cellModel.title)
+            print(cellModel.title, terminator: "\n")
         }
     }
 

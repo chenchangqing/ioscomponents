@@ -147,7 +147,7 @@ class CJCollectionViewHeader: UICollectionReusableView {
     
     // MARK: -
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
         setup()
@@ -221,10 +221,10 @@ class CJCollectionViewHeader: UICollectionReusableView {
         // add constrains
         constrainsViewDic[kMoreButton] = moreButton
         
-        moreButton.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kMoreButton)]-\(kLineHeight)-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
+        moreButton.translatesAutoresizingMaskIntoConstraints = false
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kMoreButton)]-\(kLineHeight)-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: constrainsViewDic))
         
-        let tempConstraints = NSLayoutConstraint.constraintsWithVisualFormat("H:[\(kMoreButton)(\(kMoreButtonWidth))]-\(rightMargin)-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic) as! [NSLayoutConstraint]
+        let tempConstraints = NSLayoutConstraint.constraintsWithVisualFormat("H:[\(kMoreButton)(\(kMoreButtonWidth))]-\(rightMargin)-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: constrainsViewDic) 
         self.addConstraints(tempConstraints)
         
         // 保存moreButton width constrain
@@ -250,9 +250,9 @@ class CJCollectionViewHeader: UICollectionReusableView {
         // add constrains
         constrainsViewDic[kClearButton] = clearButton
         
-        clearButton.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kClearButton)]-\(kLineHeight)-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[\(kClearButton)(\(kClearButtonWidth))]-8-[\(kMoreButton)]", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
+        clearButton.translatesAutoresizingMaskIntoConstraints = false
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kClearButton)]-\(kLineHeight)-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: constrainsViewDic))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[\(kClearButton)(\(kClearButtonWidth))]-8-[\(kMoreButton)]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: constrainsViewDic))
         
         // event
         clearButton.addTarget(self, action: Selector("clearBtnClicked:"), forControlEvents: UIControlEvents.TouchUpInside)
@@ -273,14 +273,14 @@ class CJCollectionViewHeader: UICollectionReusableView {
         // add constrains
         constrainsViewDic[kTitleButton] = titleButton
         
-        titleButton.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kTitleButton)]-\(kLineHeight)-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
+        titleButton.translatesAutoresizingMaskIntoConstraints = false
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kTitleButton)]-\(kLineHeight)-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: constrainsViewDic))
         
-        let tempConstraints = NSLayoutConstraint.constraintsWithVisualFormat("H:|-\(leftMargin)-[\(kTitleButton)]-8-[\(kClearButton)]", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic)
+        let tempConstraints = NSLayoutConstraint.constraintsWithVisualFormat("H:|-\(leftMargin)-[\(kTitleButton)]-8-[\(kClearButton)]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: constrainsViewDic)
         self.addConstraints(tempConstraints)
         
         // save leftMarginConstraint
-        titleButtonLeftMarginConstraint = tempConstraints[0] as! NSLayoutConstraint
+        titleButtonLeftMarginConstraint = tempConstraints[0]
     }
     
     private func setupLine() {
@@ -295,13 +295,13 @@ class CJCollectionViewHeader: UICollectionReusableView {
         // add constrains
         constrainsViewDic[kLine] = line
         
-        line.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[\(kLine)(\(kLineHeight))]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic))
+        line.translatesAutoresizingMaskIntoConstraints = false
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[\(kLine)(\(kLineHeight))]-0-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: constrainsViewDic))
         
-        let tempConstraints = NSLayoutConstraint.constraintsWithVisualFormat("H:|-\(leftMargin)-[\(kLine)]-\(rightMargin)-|", options: NSLayoutFormatOptions(0), metrics: nil, views: constrainsViewDic)
+        let tempConstraints = NSLayoutConstraint.constraintsWithVisualFormat("H:|-\(leftMargin)-[\(kLine)]-\(rightMargin)-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: constrainsViewDic)
         self.addConstraints(tempConstraints)
-        lineLeftMarginConstraint = tempConstraints[0] as! NSLayoutConstraint
-        lineRightMarginConstraint = tempConstraints[1] as! NSLayoutConstraint
+        lineLeftMarginConstraint = tempConstraints[0] 
+        lineRightMarginConstraint = tempConstraints[1] 
     }
     
     // MARK: - event clicked

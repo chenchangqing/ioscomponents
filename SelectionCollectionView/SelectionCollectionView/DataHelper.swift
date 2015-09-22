@@ -27,15 +27,30 @@ class DataHelper: NSObject {
             
             let filePath = NSBundle.mainBundle().pathForResource(fileName, ofType: "json")!
             let data     = NSFileManager.defaultManager().contentsAtPath(filePath)
-            var error:NSError?
+
             if let data = data {
                 
-                let dataSource = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &error) as! [String:[[String:AnyObject]]]
+                var dataSource: [String:[[String:AnyObject]]]!
                 
-                for key in dataSource.keys.array {
+                do {
+                    try
+                    dataSource = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers) as! [String : [[String : AnyObject]]]
+                } catch {
+                    
+                    
+                }
+                
+                for key in dataSource.keys {
                     
                     let keyData = key.dataUsingEncoding(NSUTF8StringEncoding)!
-                    let keyDic  = NSJSONSerialization.JSONObjectWithData(keyData, options: NSJSONReadingOptions.MutableContainers, error: nil) as! [String:AnyObject]
+                    var keyDic : [String:AnyObject]!
+                    
+                    do {
+                        try
+                        keyDic = NSJSONSerialization.JSONObjectWithData(keyData, options: NSJSONReadingOptions.MutableContainers) as! [String : AnyObject]
+                    } catch {
+                        
+                    }
                     
                     let icon = keyDic["icon"] as? String
                     let title = keyDic["title"] as? String

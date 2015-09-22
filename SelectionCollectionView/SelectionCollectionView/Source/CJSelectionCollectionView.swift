@@ -17,7 +17,6 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         
         didSet {
             
-            // fix isShowMoreBtnDictionary is nil bug
             caculate()
             
             // 保存原始数据
@@ -59,7 +58,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
                     
                     let allChoiceModel = CJCollectionViewCellModel(icon: nil, title: kAllTitle)
                     
-                    if let cellModel=querySelectedCellModel(cellModels: cellModels) {
+                    if let _=querySelectedCellModel(cellModels: cellModels) {
                         
                         allChoiceModel.selected = false
                     } else {
@@ -163,7 +162,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     /**
     * 点击单元格事件
     */
-    var cellClicked : (cellModel:CJCollectionViewCellModel) -> Void = { celModel in }
+    var cellClicked : (headerModel:CJCollectionViewHeaderModel,cellModel:CJCollectionViewCellModel) -> Void = { (header,celModel) in }
     
     /**
     * 选中数组
@@ -250,7 +249,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     
     // MARK: -
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
         setup()
@@ -326,9 +325,9 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         collectionView.delegate     = self
         
         // add constrains
-        collectionView.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[\(kCollectionView)]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: [kCollectionView: collectionView]))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kCollectionView)]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: [kCollectionView: collectionView]))
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[\(kCollectionView)]-0-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: [kCollectionView: collectionView]))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kCollectionView)]-0-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: [kCollectionView: collectionView]))
         
     }
     
@@ -339,7 +338,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     */
     private func keyForSection(section:Int) -> CJCollectionViewHeaderModel {
         
-        return dataSource.keys[section]
+        return dataSource[section].0
     }
     
     /**
@@ -347,7 +346,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     */
     private func arrayForSection(section:Int) -> [CJCollectionViewCellModel] {
         
-        return dataSource[keyForSection(section)]!
+        return dataSource[section].1
     }
     
     /**
@@ -362,12 +361,12 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         
-        println("didSelectItemAtIndexPath:\(indexPath)")
+        print("didSelectItemAtIndexPath:\(indexPath)")
     }
     
     func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath) {
         
-        println("didDeselectItemAtIndexPath:\(indexPath)")
+        print("didDeselectItemAtIndexPath:\(indexPath)")
     }
     
     // MARK: - CJCollectionViewCellDelegate
@@ -485,7 +484,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
             break;
         case .SingleClick:
             
-            self.cellClicked(cellModel: cellModel)
+            self.cellClicked(headerModel:headerModel, cellModel: cellModel)
             
             break;
             
@@ -864,7 +863,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         
         var resultDic = [CJCollectionViewHeaderModel:[Int]]()
         
-        for key in dataSource.keys {
+        for (_, (key, _)) in dataSource.enumerate() {
             
             let tempArray = caculateCellCountForEveryRow(dataSource[key]!)
             resultDic[key] = tempArray
@@ -881,7 +880,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         
         var resultDic = [CJCollectionViewHeaderModel:Int]()
         
-        for key in cellCountDictionary.keys.array {
+        for key in cellCountDictionary.keys {
             
             var sum: Int = 0
             let cellCountForEveryRowArray = cellCountDictionary[key]!
@@ -911,7 +910,7 @@ class CJSelectionCollectionView: UIView, UICollectionViewDataSource, UICollectio
         
         var resultDic = [CJCollectionViewHeaderModel: Bool]()
         
-        for key in cellCountDictionary.keys.array {
+        for key in cellCountDictionary.keys {
             
             let cellCountForEveryRowArray = cellCountDictionary[key]!
             

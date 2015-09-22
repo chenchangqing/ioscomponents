@@ -102,7 +102,7 @@ class CJCollectionViewCell: UICollectionViewCell {
     
     // MARK: -
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
         setup()
@@ -143,9 +143,9 @@ class CJCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(button)
         
         // constrains
-        button.setTranslatesAutoresizingMaskIntoConstraints(false)
-        contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[button]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: ["button":button]))
-        contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[button]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: ["button":button]))
+        button.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[button]-0-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["button":button]))
+        contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[button]-0-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["button":button]))
         
         // event
         button.addTarget(self, action: Selector("buttonClicked:"), forControlEvents: UIControlEvents.TouchUpInside)
@@ -158,7 +158,7 @@ class CJCollectionViewCell: UICollectionViewCell {
      */
     private func changePaddingBetweenIconAndTitle() {
         
-        if let icon = icon {
+        if let _ = icon {
             
             button.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, marginBetweenIconAndTitle)
             button.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0)

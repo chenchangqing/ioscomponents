@@ -17,7 +17,7 @@ class CJCollectionViewEmptyCell: UICollectionViewCell {
     
     // MARK: -
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
         setup()
@@ -41,14 +41,14 @@ class CJCollectionViewEmptyCell: UICollectionViewCell {
         // create
         messageLabel = UILabel()
         messageLabel.text = "空"
-        messageLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
+        messageLabel.translatesAutoresizingMaskIntoConstraints = false
         
         // add to self
         self.addSubview(messageLabel)
         
         // add constraints
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[\(kMessageLabel)]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: [kMessageLabel: messageLabel]))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kMessageLabel)]-0-|", options: NSLayoutFormatOptions(0), metrics: nil, views: [kMessageLabel: messageLabel]))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[\(kMessageLabel)]-0-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: [kMessageLabel: messageLabel]))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[\(kMessageLabel)]-0-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: [kMessageLabel: messageLabel]))
     }
     
     

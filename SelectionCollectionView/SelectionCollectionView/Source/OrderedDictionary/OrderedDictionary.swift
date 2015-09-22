@@ -1,185 +1,220 @@
 //
 //  OrderedDictionary.swift
-//  BookShelf
+//  OrderedDictionary
 //
-//  Created by Joel Cummings on 2015-06-02.
-//  Copyright (c) 2015 Joel Cummings. All rights reserved.
+//  Created by Lukas Kubanek on 29/08/15.
+//  Copyright © 2015 Lukas Kubanek. All rights reserved.
 //
 
-import Foundation
-
-/**
-*  The Ordered dictionary is designed to maintain the order of insertion into a dictionary.
-*  This enables one to use sorted data within the dictionary
-*/
-public struct OrderedDictionary<Tk: Hashable, Tv> : Printable, SequenceType {
-	
-	var keys: Array<Tk> = []
-	private var dict: Dictionary<Tk, Tv> = [:]
+public struct OrderedDictionary<Key: Hashable, Value>: CollectionType, ArrayLiteralConvertible, CustomStringConvertible {
     
-    var count : Int {
+    // MARK: - Initialization
+    
+    public init() {
+        self.orderedKeys = []
+        self.keysToValues = [:]
+    }
+    
+    public init(elements: [Element]) {
+        self.init()
         
-        get {
-            
-            return keys.count
+        for element in elements {
+            self[element.0] = element.1
         }
     }
+    
+    public init(arrayLiteral elements: Element...) {
+        self.init(elements: elements)
+    }
+    
+    // MARK: - Type Aliases
+    
+    public typealias Element = (Key, Value)
+    public typealias Index = Int
+    
+    // MARK: - Managing Content Using Keys
+    
+    public subscript(key: Key) -> Value? {
+        get {
+            return keysToValues[key]
+        }
+        set(newValue) {
+            if let newValue = newValue {
+                updateValue(newValue, forKey: key)
+            } else {
+                removeValueForKey(key)
+            }
+        }
+    }
+    
+    public func containsKey(key: Key) -> Bool {
+        return orderedKeys.contains(key)
+    }
+    
+    public mutating func updateValue(value: Value, forKey key: Key) -> Value? {
+        if orderedKeys.contains(key) {
+            guard let currentValue = keysToValues[key] else {
+                fatalError("Inconsistency error occured in OrderedDictionary")
+            }
+            
+            keysToValues[key] = value
+            
+            return currentValue
+        } else {
+            orderedKeys.append(key)
+            keysToValues[key] = value
+            
+            return nil
+        }
+    }
+    
+    public mutating func removeValueForKey(key: Key) -> Value? {
+        if let index = orderedKeys.indexOf(key) {
+            guard let currentValue = keysToValues[key] else {
+                fatalError("Inconsistency error occured in OrderedDictionary")
+            }
+            
+            orderedKeys.removeAtIndex(index)
+            keysToValues[key] = nil
+            
+            return currentValue
+        } else {
+            return nil
+        }
+    }
+    
+    public mutating func removeAll(keepCapacity keepCapacity: Bool = true) {
+        orderedKeys.removeAll(keepCapacity: keepCapacity)
+        keysToValues.removeAll(keepCapacity: keepCapacity)
+    }
+    
+    // MARK: - Managing Content Using Indexes
+    
+    public subscript(index: Index) -> Element {
+        get {
+            guard let element = elementAtIndex(index) else {
+                fatalError("OrderedDictionary index out of range")
+            }
+            
+            return element
+        }
+        set(newValue) {
+            updateElement(newValue, atIndex: index)
+        }
+    }
+    
+    public func indexForKey(key: Key) -> Index? {
+        return orderedKeys.indexOf(key)
+    }
+    
+    public func elementAtIndex(index: Index) -> Element? {
+        guard orderedKeys.indices.contains(index) else { return nil }
+        
+        let key = orderedKeys[index]
+        
+        guard let value = self.keysToValues[key] else {
+            fatalError("Inconsistency error occured in OrderedDictionary")
+        }
+        
+        return (key, value)
+    }
+    
+    public mutating func insertElement(newElement: Element, atIndex index: Index) -> Value? {
+        guard index >= 0 else {
+            fatalError("Negative OrderedDictionary index is out of range")
+        }
+        
+        guard index <= count else {
+            fatalError("OrderedDictionary index out of range")
+        }
+        
+        let (key, value) = (newElement.0, newElement.1)
+        
+        let adjustedIndex: Int
+        let currentValue: Value?
+        
+        if let currentIndex = orderedKeys.indexOf(key) {
+            currentValue = keysToValues[key]
+            adjustedIndex = (currentIndex < index - 1) ? index - 1 : index
+            
+            orderedKeys.removeAtIndex(currentIndex)
+            keysToValues[key] = nil
+        } else {
+            currentValue = nil
+            adjustedIndex = index
+        }
+        
+        orderedKeys.insert(key, atIndex: adjustedIndex)
+        keysToValues[key] = value
+        
+        return currentValue
+    }
+    
+    public mutating func updateElement(element: Element, atIndex index: Index) -> Element? {
+        guard let currentElement = elementAtIndex(index) else {
+            fatalError("OrderedDictionary index out of range")
+        }
+        
+        let (newKey, newValue) = (element.0, element.1)
+        
+        orderedKeys[index] = newKey
+        keysToValues[newKey] = newValue
+        
+        return currentElement
+    }
+    
+    public mutating func removeAtIndex(index: Index) -> Element? {
+        if let element = elementAtIndex(index) {
+            orderedKeys.removeAtIndex(index)
+            keysToValues.removeValueForKey(element.0)
+            
+            return element
+        } else {
+            return nil
+        }
+    }
+    
+    // MARK: - Description
+    
+    public var description: String {
+        let content = map({ "\($0.0): \($0.1)" }).joinWithSeparator(", ")
+        return "[\(content)]"
+    }
+    
+    // MARK: - Backing Store
+    
+    private var orderedKeys: [Key]
+    private var keysToValues: [Key: Value]
+    
+    // MARK: - SequenceType & Indexable Conformance
 
-	
-	public init() {
-		
-	}
-	
-	/**
-	Allows iteration of the dictionary
-	
-	:returns: returns a tuple of the form ([key], [value])
-	*/
-	public func generate() -> GeneratorOf<(Tk, Tv)> {
-	
-		var lastIndex = count
-		var nextIndex = 0
-		
-		return GeneratorOf<(Tk, Tv)> {
-			if (nextIndex >= lastIndex) {
-				return nil
-			}
-			var result: (Tk, Tv) = (self.keys[nextIndex], self.dict[self.keys[nextIndex]]!)
-			nextIndex++
-			return result
-			
-		}
-	
-	}
-	
-	/// Outputs the dictionary in string format
-	public var description: String {
-		get {
-			var str = "{\n"
-			for (key, value) in self {
-				str += "\tKey: \(key), Value: \(value)\n"
-			}
-			str += "}"
-			return str
-		}
-	}
-	
-	/**
-	Allows access via the subscript operator to manipulate 
-	the structure like a normal non-ordered dictionary. 
-	
-	:param: key key inside the dictionary
-	
-	:returns: The value at that position if the key exists, nil otherwise
-	*/
-	public subscript(key: Tk) -> Tv? {
-		get {
-			return dict[key]
-		}
-		set(newValue) {
-			if newValue != nil {
-				
-				// If the key exists update it and leave positions alone
-				let existsInDict = self.dict[key]
-				if existsInDict == nil {
-					self.keys.append(key)
-				}
-				
-				self.dict[key] = newValue
-				
-				return
-			} else {
-				self.dict.removeValueForKey(key)
-				self.keys.removeAtIndex(getKeyPosition(key)!)
-			}
-		}
-	}
-	
-	
-	/**
-	Searches the dictionary to determine if the key already exists.
-	Note: if the key exists it also contains some non-nil value 
-	in the dictionary.
-	
-	:param: key The key of to locate in the dictionary
-	
-	:returns: true if the key exists and has a value, false otherwise
-	
-		*/
-	public func containsKey(key: Tk) -> Bool {
-		var result: Bool
-		if let value = self.dict[key] {
-			result = true
-		} else {
-			result = false
-		}
-		
-		return result
-	}
-	
-	/**
-	Retrieves the key from dictionary given a position
-	
-	:param: pos some integer value in the dictionary
-	
-	:returns: the key value if it exists, nil otherwise
-	*/
-	public func getKeyAtPosition(pos: Int) -> Tk? {
-		var result: Tk?
-		if (pos < self.keys.count) {
-			result = self.keys[pos]
-		}
-		return result
-	}
-	
-	/**
-	Returns the value at a given position in the dictionary
-	
-	:param: pos some integer value in the dictionary
-	
-	:returns: the value at that position
-	*/
-	public func getValueAtPosition(pos: Int) -> Tv? {
-		var result: Tv?
-		if let key = getKeyAtPosition(pos) {
-			result =  self.dict[key]
-		}
-		return result
-	}
-	
-	/**
-	Given a key in the dicitionary retrieve its position
-	
-	:param: key to search in the dictionary
-	
-	:returns: the position of the key provided it exists, nil otherwise
-	*/
-	public func getKeyPosition(key: Tk) -> Int? {
-		var keyPos: Int?
-		for var i = 0; i < self.keys.count; i++ {
-			if key == keys[i] {
-				keyPos = i;
-				break
-			}
-		}
-		
-		return keyPos
-	}
-	
-	/**
-	Updates a current key value pair in the dictionary at a particular position
-	
-	:param: newValue The new value to be added
-	:param: key      They current key within the dictionary to replace the value for
-	*/
-	mutating public func updateValue(newValue: Tv, forKey key: Tk) {
-		if let keyPos = getKeyPosition(key) {
-			keys[keyPos] = key
-			dict.updateValue(newValue, forKey: key)
-			
-		}
-	}
-	
-	
+    public func generate() -> AnyGenerator<Element> {
+        var nextIndex = 0
+        let lastIndex = self.count
+        
+        return anyGenerator {
+            guard nextIndex < lastIndex else { return nil }
+            
+            let nextKey = self.orderedKeys[nextIndex]
+            
+            guard let nextValue = self.keysToValues[nextKey] else {
+                fatalError("Inconsistency error occured in OrderedDictionary")
+            }
+            
+            let element = (nextKey, nextValue)
+            
+            nextIndex++
+            
+            return element
+        }
+    }
+    
+    public var startIndex: Index { return orderedKeys.startIndex }
+    
+    public var endIndex: Index { return orderedKeys.endIndex }
+    
 }
 
+public func == <Key: Equatable, Value: Equatable>(lhs: OrderedDictionary<Key, Value>, rhs: OrderedDictionary<Key, Value>) -> Bool {
+    return lhs.orderedKeys == rhs.orderedKeys && lhs.keysToValues == rhs.keysToValues
+}
